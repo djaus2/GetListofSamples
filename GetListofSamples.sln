@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectClasses", "ProjectClasses\ProjectClasses.csproj", "{ACC314D9-83FB-44F9-9295-FCFFBD7F1BCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetAnAzureIoTQuickstartApp.Server", "GetAnAzureIoTQuickstartApp\Server\GetAnAzureIoTQuickstartApp.Server.csproj", "{A80D2BA8-BDDB-4816-B737-A5C93100C13E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetAnAzureIoTQuickstartApp.Client", "GetAnAzureIoTQuickstartApp\Client\GetAnAzureIoTQuickstartApp.Client.csproj", "{07FD0169-8611-4820-94C4-6E93F7876823}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetAnAzureIoTQuickstartApp.Shared", "GetAnAzureIoTQuickstartApp\Shared\GetAnAzureIoTQuickstartApp.Shared.csproj", "{26D98FBD-8770-42A3-B0DB-40B8B1DE37C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetSamples", "GetSamples\GetSamples.csproj", "{B21263B4-32CB-48A0-BA18-26A23F5ACF13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGetProjects", "TestGetProjects\TestGetProjects.csproj", "{8F48FA22-C461-482B-B2C8-53E9E51CD032}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ACC314D9-83FB-44F9-9295-FCFFBD7F1BCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC314D9-83FB-44F9-9295-FCFFBD7F1BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC314D9-83FB-44F9-9295-FCFFBD7F1BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC314D9-83FB-44F9-9295-FCFFBD7F1BCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A80D2BA8-BDDB-4816-B737-A5C93100C13E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A80D2BA8-BDDB-4816-B737-A5C93100C13E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A80D2BA8-BDDB-4816-B737-A5C93100C13E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A80D2BA8-BDDB-4816-B737-A5C93100C13E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07FD0169-8611-4820-94C4-6E93F7876823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07FD0169-8611-4820-94C4-6E93F7876823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07FD0169-8611-4820-94C4-6E93F7876823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07FD0169-8611-4820-94C4-6E93F7876823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D98FBD-8770-42A3-B0DB-40B8B1DE37C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D98FBD-8770-42A3-B0DB-40B8B1DE37C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D98FBD-8770-42A3-B0DB-40B8B1DE37C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D98FBD-8770-42A3-B0DB-40B8B1DE37C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B21263B4-32CB-48A0-BA18-26A23F5ACF13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B21263B4-32CB-48A0-BA18-26A23F5ACF13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B21263B4-32CB-48A0-BA18-26A23F5ACF13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B21263B4-32CB-48A0-BA18-26A23F5ACF13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F48FA22-C461-482B-B2C8-53E9E51CD032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F48FA22-C461-482B-B2C8-53E9E51CD032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F48FA22-C461-482B-B2C8-53E9E51CD032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F48FA22-C461-482B-B2C8-53E9E51CD032}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49F8E8D6-8914-4BF1-A2AA-E029EB9B369B}
+	EndGlobalSection
+EndGlobal
