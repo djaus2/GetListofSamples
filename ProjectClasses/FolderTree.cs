@@ -13,6 +13,7 @@ namespace ProjectClasses
         public static int Count = 0;
         public static List<FolderTree> AllFolderTrees=null;
 
+
         public int Id { get; set; }
 
         public FolderTree( FolderTree parent)
@@ -21,14 +22,17 @@ namespace ProjectClasses
             {
                 Parent = -1;
                 Count = 0;
+                Depth = 0;
             }
             else
             {
                 Parent = parent.Id;
+                Depth = parent.Depth + 1;
             }
             Id = Count++;
             Children = new List<int>();
             Projects = new List<int>();
+            Solutions = new List<string>();
             if (AllFolderTrees == null)
                 AllFolderTrees = new List<FolderTree>();
             AllFolderTrees.Add(this);
@@ -44,6 +48,18 @@ namespace ProjectClasses
         public int Parent { get; set; } = -1;
         public List<int> Children { get; set; }
         public List<int> Projects { get; set; }
+        public List<string> Solutions { get; set; }
+
+        [JsonIgnore]
+        public List<string> SolutionNames
+        {
+            get
+            {
+                var sn = from s in Solutions select Path.GetFileName(s);
+                return sn.ToList();
+            }
+        }
+        //public List<string> LocalSolutions { get; set; }
 
         [JsonIgnore]
         public List<string> ProjectNames
@@ -54,17 +70,9 @@ namespace ProjectClasses
                 return projNames.ToList();
             }
         }
-        [JsonIgnore]
-        public int Depth
-        {
-            get
-            {
-                if (Parent == -1)
-                    return 0;
-                else
-                    return AllFolderTrees[Parent].Depth + 1;
-            }
-        }
+
+        public int Depth { get; set; }
+
 
         public string FolderName { get; set; }
         string folderPath;
@@ -106,7 +114,23 @@ namespace ProjectClasses
                 return (NumProjects != 0);
             }
         }
+        [JsonIgnore]
+        public int NumSolutions
+        {
+            get
+            {
+                return Solutions.Count;
+            }
+        }
+        [JsonIgnore]
+        public bool HasSolutions
+        {
+            get
+            {
+                return (NumSolutions != 0);
+            }
+        }
 
- 
+
     }
 }

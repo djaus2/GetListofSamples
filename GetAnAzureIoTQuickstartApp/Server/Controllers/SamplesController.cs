@@ -27,10 +27,19 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
         //    return alpha;
         //}
 
-        int count = 1;
+        static int count = 1;
         [HttpGet]
         public string Get()
         {
+            var projIds = (from p in SamplesCollections.Projects select p.Id).ToList();
+            var treeIds = (from t in SamplesCollections.Folders select t.Projects).ToList();
+            var ll = treeIds.SelectMany(d => d).ToList();
+
+            int countp = projIds.Count;
+            int countt = ll.Count;
+            var sdf = ll.Except(projIds).ToList();
+            var sdf2 = projIds.Except(ll).ToList();
+
             string json = "";
             if (count == 0)
             {
@@ -42,7 +51,7 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
             {
                 var folders = SamplesCollections.Folders;
                 json = JsonConvert.SerializeObject(folders);
-                //count = 0;
+                count = 0;
             }
             return json;
         }

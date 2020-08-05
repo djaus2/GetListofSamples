@@ -18,6 +18,13 @@ namespace GetAnAzureIoTQuickstartApp.Shared
             RootFolder = rootFolder;
             Folders = FolderTree.AllFolderTrees;
             Projects = Project.AllProjects;
+
+            //var projIds = (from p in Project.AllProjects select p.Id).ToList();
+            //var treeIds = (from t in FolderTree.AllFolderTrees select t.Projects).ToList();
+            //var ll = treeIds.SelectMany(d => d).ToList();
+
+            //var sdf = ll.Except(projIds).ToList();
+            //var sdf2 = projIds.Except(ll).ToList();
         }
 
     }

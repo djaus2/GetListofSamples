@@ -56,7 +56,20 @@ namespace TestGetProjects
                 if (t.HasProjects)
                     Console.WriteLine("{0} \tId:{1} \tParent:{2} \tNumChildren:{3} \tNumProjects:{4}", t.FolderName, t.Id, t.Parent, t.NumChildren, t.NumProjects);
             }
-            
+
+            foreach (var t in FolderTree.AllFolderTrees)
+            {
+                if (t.HasSolutions)
+                    Console.WriteLine("{0} \tId:{1} \tParent:{2} \tNumSolutions:{3} \tSolution{4}", t.FolderName, t.Id, t.Parent, t.NumSolutions, t.Solutions[0]);
+            }
+
+            var projIds = (from p in Project.AllProjects select p.Id).ToList();
+            var treeIds = (from t in FolderTree.AllFolderTrees select t.Projects).ToList();
+            var ll = treeIds.SelectMany(d => d).ToList();
+
+            var sdf = ll.Except(projIds).ToList();
+            var sdf2 = projIds.Except(ll).ToList();
+
 
         }
 

@@ -37,9 +37,7 @@ namespace GetSamples
             var fldrs = path.Split(new char[] { '\\' });
             string folderName = fldrs[fldrs.Length - 1];
 
-
             string[] projFilePaths = Directory.GetFiles(path, "*.csproj");
-
             foreach (var fp in projFilePaths)
             {
                 var localPath = fp.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
@@ -50,6 +48,16 @@ namespace GetSamples
                     FullPath = fp
                 };
                 Folder.Projects.Add(proj.Id);
+            }
+
+            string[] solutions = Directory.GetFiles(path, "*.sln");
+            foreach (var sln in solutions)
+            {
+                var slnlocalPath = sln.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
+
+
+                Folder.Solutions.Add(sln);
+                //Folder.LocalSolutions.Add(slnlocalPath);
             }
 
             string[] dirs = Directory.GetDirectories(
@@ -65,7 +73,7 @@ namespace GetSamples
                         Folder.Children.Add(folder.Id);
                 }
             }
-            if ((Folder.Children.Count==0)&& (Folder.Projects.Count==0))
+            if ((Folder.Children.Count==0)&& (Folder.Projects.Count==0) && (Folder.Solutions.Count == 0))
             {
                 FolderTree.AllFolderTrees.Remove(Folder);
                 Folder = null;

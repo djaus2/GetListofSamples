@@ -9,6 +9,7 @@ using System.Text.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 
 namespace GetAnAzureIoTQuickstartApp.Client.Services
 {
@@ -31,7 +32,8 @@ namespace GetAnAzureIoTQuickstartApp.Client.Services
         public Project[] Projects { get; set; }
         public FolderTree[] Folders { get; set; }
         public FolderTree RootFolder { get; set; }
-        public Dictionary<int,FolderTree>FolderDict {get; set;}
+        public static Dictionary<int,FolderTree>FolderDict {get; set;}
+        public static Dictionary<int, Project> ProjectDict { get; set; }
 
         public static char CurrentIndex { get; set; } = '0';
 
@@ -55,13 +57,40 @@ namespace GetAnAzureIoTQuickstartApp.Client.Services
         {
             var strn = await client.GetAsync(ServiceEndpoint);
             string content = await strn.Content.ReadAsStringAsync();
-            //Projects = JsonConvert.DeserializeObject<Project[]>(content);
             Folders =  JsonConvert.DeserializeObject<FolderTree[]>(content);
             RootFolder = Folders[0];
             FolderDict = new Dictionary<int, FolderTree>();
             foreach (var folder in Folders)
             {
                 FolderDict.Add(folder.Id, folder);
+                var asd = FolderDict[folder.Id];
+            }
+
+            var strn1 = await client.GetAsync(ServiceEndpoint);
+            string content1 = await strn1.Content.ReadAsStringAsync();
+            Projects = JsonConvert.DeserializeObject<Project[]>(content1);
+
+            ProjectDict = new Dictionary<int, Project>();
+            foreach (Project project in Projects)
+            {
+                ProjectDict.Add(project.Id, project);
+            }
+            var keys = ProjectDict.Keys.ToList();
+
+            var projIds = (from p in Projects select p.Id).ToList();
+            var treeIds = (from t in Folders select t.Projects).ToList();
+            var ll = treeIds.SelectMany(d => d).ToList();
+
+            var sdf = ll.Except(projIds).ToList();
+            var sdf2 = projIds.Except(ll).ToList();
+
+
+            foreach (Project project in Projects)
+            {
+                if (!keys.Contains(project.Id))
+                {
+                    System.Diagnostics.Debug.WriteLine(project.Id);
+                }
             }
             return Folders;    
         }

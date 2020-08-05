@@ -24,6 +24,8 @@ namespace GetAnAzureIoTQuickstartApp.Client
             builder.Services.AddHttpClient<Services.SamplesClient>(client =>
                 client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
             await builder.Build().RunAsync();
+
+
         }
     }
 
