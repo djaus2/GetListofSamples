@@ -60,48 +60,19 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
         [HttpGet("{param}")]
         public string Get(string param)
         {
-            string[] names = param.Split(new char[] { '-' });
-            string DeviceName = names[0];
-            string ProjectName = names[1];
-            string FileType = names[2];
-            List<Project> projects = new List<Project>(); //
-                //GetAnAzureIoTQuickstartApp.Shared.SamplesCollections.Projects[DeviceName];
-            var xproject = from p in projects where p.Name == ProjectName select p;
-            var project = xproject.FirstOrDefault();
-            string path="";
-            string text = "";
-            if (FileType == "Image")
+            string text = "404";
+            System.Diagnostics.Debug.WriteLine(param);
+            string[] names = param.Split(new char[] { '~' });
+            string FileName = names[0];
+            string FolderId = names[1];
+            int foldId;
+            if (int.TryParse(FolderId, out foldId))
             {
-                path = $"{project.Path}/{project.ProjectPNGFileName}";
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    using (Bitmap qrCodeImage = new Bitmap(path))
-                    {
-                        qrCodeImage.Save(ms, ImageFormat.Png);
-                        text = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-                    }
-                }
-            }
-            else
-            {
-                if (FileType == "SourceFile")
-                    path = $"{project.Path}/{project.ProjectCSFileName}";
-                else if (FileType == "ProjectFile")
-                    path = $"{project.Path}/{project.ProjectFileName}";
-                else if (FileType == "ProjectFileUse")
-                    path = $"Pages//Project.csproj.txt";
-                else if (FileType == "ReadMe")
-                {
-                    path = Path.GetFullPath(Path.Combine(project.Path, @"..\ReadMe.md"));
-                }
-                else if (FileType == "HowTo")
-                {
-                    path = $"Pages//HowTo.md"; ;
-                }
-                else if (FileType == "HowTo2")
-                {
-                    path = $"Pages//HowTo2.md"; ;
-                }
+                var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
+                var folder = fld.First();
+                string fpath = folder.FolderPath;
+                string path = Path.Combine(fpath, FileName);
+                path = path.Replace("\\\\", "\\");
                 text = System.IO.File.ReadAllText(path);
             }
             return text;

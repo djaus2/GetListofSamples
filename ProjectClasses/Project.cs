@@ -25,6 +25,7 @@ namespace ProjectClasses
             if (AllProjects == null)
                 AllProjects = new List<Project>();
             AllProjects.Add(this);
+            ProjectCSFileNames = new List<string>();
         }
 
         int FolderTree { get; set; }
@@ -124,20 +125,20 @@ namespace ProjectClasses
                     return ProjectFileName;
             }
         }
-        public string ProjectCSFileName { get; set; }
-        public string ProjectCSFileName_WithoutText
-        { 
-            get {
-                if (string.IsNullOrEmpty(ProjectCSFileName))
-                    return "";
-                else if (ProjectCSFileName.Length < 4)
-                    return "";
-                else if (ProjectCSFileName.Substring(ProjectCSFileName.Length - ".txt".Length).ToLower() == ".txt")
-                    return ProjectCSFileName.Substring(0, ProjectCSFileName.Length - ".txt".Length);
-                else
-                    return ProjectCSFileName;
-            } 
-        }
+        public List<string> ProjectCSFileNames { get; set; }
+        //public string ProjectCSFileName_WithoutText
+        //{ 
+        //    get {
+        //        if (string.IsNullOrEmpty(ProjectCSFileName))
+        //            return "";
+        //        else if (ProjectCSFileName.Length < 4)
+        //            return "";
+        //        else if (ProjectCSFileName.Substring(ProjectCSFileName.Length - ".txt".Length).ToLower() == ".txt")
+        //            return ProjectCSFileName.Substring(0, ProjectCSFileName.Length - ".txt".Length);
+        //        else
+        //            return ProjectCSFileName;
+        //    } 
+        //}
         public string ProjectPNGFileName { get; set; }
         public int NoCSFiles { get; set; } = 1;
     }

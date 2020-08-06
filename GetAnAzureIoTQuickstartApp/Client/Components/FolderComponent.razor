@@ -1,6 +1,7 @@
 ﻿@* @page "/BlazorComponent/{Title}" Uncomment if you want Component to be available via URL *@
 @using GetAnAzureIoTQuickstartApp.Client.Services
 @using GetAnAzureIoTQuickstartApp.Client.Components
+@inject NavigationManager navigationManager
 @if (@Visibility)
 {
     @if (Folder == null)
@@ -9,53 +10,66 @@
     }
     else
     {
-<tr>
+        <tr>
 
-    <td>@Folder.Children.Count</td>
-    <td>@Folder.Projects.Count</td>
-    <td>@Folder.Solutions.Count</td>
-    @for (int i = 0; i < Folder.Depth; i++)
-    {
-        <td></td>
-    }
-    @if (Folder.Depth == 0)
-    {
-        <td colspan="2"><button id=@Folder.FolderName class="btn btn-primary" @onclick=@SampleMe><h2>@Folder.FolderName</h2></button></td>
-    }
-    else
-    {
-        @if (@Folder.HasChildren)
-        {
-            @if (Folder.Depth == 1)
+            <td>@Folder.Children.Count</td>
+            <td>@Folder.Projects.Count</td>
+            <td>@Folder.Solutions.Count</td>
+            @for (int i = 0; i < Folder.Depth; i++)
             {
-                <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button></td>
+                <td></td>
+            }
+            @if (Folder.Depth == 0)
+            {
+                <td colspan="2"><button id=@Folder.FolderName class="btn btn-primary" @onclick=@SampleMe><h2>@Folder.FolderName</h2></button></td>
             }
             else
             {
-                <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button></td>
+                @if (@Folder.HasChildren)
+                {
+                    @if (Folder.Depth == 1)
+                    {
+                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button></td>
+                    }
+                    else
+                    {
+                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button></td>
+                    }
+                }
+                else
+                {
+                    <td colspan="2"><button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">
+                                            <b>@Folder.FolderName</b></button></td>
+                }
             }
-        }
-        else
-        {
-            <td colspan="2"><b><font color="red">@Folder.FolderName</font></b></td>
-        }
-    }
-    <td></td>
-</tr>
+            <td></td>
+        </tr>
 
         @if (Folder.Projects.Count > 0)
         {
             @foreach (int f1p in Folder.Projects)
             {
-<tr>
-    @for (int i = 0; i < Folder.Depth + 3; i++)
-    {
-        <td></td>
-    }
-    <td colspan="2"><a href="/samples/@f1p">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
-    <td></td>
-</tr>
+                <tr>
+                    @for (int i = 0; i < Folder.Depth + 4; i++)
+                    {
+                        <td></td>
+                    }
+                    <td colspan="2"><a href="/samples/@f1p">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
+                    <td></td>
+                </tr>
+                @foreach (string csFileName in SamplesClient.ProjectDict[f1p].ProjectCSFileNames)
+                {
+                    <tr>
+                        @for (int i = 0; i < Folder.Depth + 4; i++)
+                        {
+                            <td></td>
+                        }
+                        <td colspan="2"><a href="/samples/@f1p"><font color="brown">@csFileName</font></a></td>
+                        <td></td>
+                    </tr>
+                }
             }
+
         }
         @if (Folder.Solutions.Count > 0)
         {
@@ -81,13 +95,15 @@
 
 @code
 {
-    [Parameter]
-    public int folder { get; set; }
+        [Parameter]
+        public int folder { get; set; }
 
-    [Parameter]
-    public bool IsViz { get { return Visibility; } set { Visibility = value;} }
+        [Parameter]
+        public bool IsViz { get { return Visibility; } set { Visibility = value; } }
 
-    bool _Visibility = false;
+
+
+        bool _Visibility = false;
     public bool Visibility { get { return _Visibility; } set { _Visibility = value; StateHasChanged(); } }
 
     public bool LowerIsViz { get; set; } = false;
@@ -97,6 +113,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+
+
         await base.OnInitializedAsync();
         Folder = SamplesClient.FolderDict[folder];
         if (Folder.Depth < 2)
@@ -121,6 +139,13 @@
     {
         LowerIsViz = !LowerIsViz;
         StateHasChanged();
+    }
+
+    protected void GoToProject(int id)
+    {
+        string target = $"/Project/{id}";
+
+        navigationManager.NavigateTo(target);
     }
 
 

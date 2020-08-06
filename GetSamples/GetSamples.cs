@@ -47,6 +47,15 @@ namespace GetSamples
                     RelativePath = localPath,
                     FullPath = fp
                 };
+                //Assuming one project per folder. Not true for dotnet/iot
+                string[] csFiles = Directory.GetFiles(path, "*.cs");
+                foreach (var cs in csFiles)
+                {
+                    var cslnlocalPath = cs.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
+
+                    var csShort = Path.GetFileName(cs);
+                    proj.ProjectCSFileNames.Add(csShort);
+                }
                 Folder.Projects.Add(proj.Id);
             }
 
@@ -59,6 +68,8 @@ namespace GetSamples
                 Folder.Solutions.Add(sln);
                 //Folder.LocalSolutions.Add(slnlocalPath);
             }
+
+
 
             string[] dirs = Directory.GetDirectories(
                     path);
