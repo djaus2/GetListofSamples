@@ -38,5 +38,12 @@ namespace GetAnAzureIoTQuickstartApp.Client
                 filename,
                 Convert.ToBase64String(data));
         }
+
+        public async static Task SaveAsZip(IJSRuntime js, string filename, byte[] data)
+        {
+            await js.InvokeAsync<object>(
+                "saveAsZipFile",
+                filename);
+        }
     }
 }

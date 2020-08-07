@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
+using System.IO.Compression;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,9 +72,39 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
                 var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
                 var folder = fld.First();
                 string fpath = folder.FolderPath;
-                string path = Path.Combine(fpath, FileName);
-                path = path.Replace("\\\\", "\\");
-                text = System.IO.File.ReadAllText(path);
+                if (FileName.Contains(".zip"))
+                {
+                    string zipPath = $".\\Downloads\\{FileName}";
+                    if (!System.IO.File.Exists(zipPath))
+                    {
+                        ZipFile.CreateFromDirectory(fpath, zipPath);
+                        text = "Zipped";
+                    }
+                    else
+                        text = "Already zipped";
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
+                        {
+                            byte[] bytes = new byte[file.Length];
+                            int len1 = bytes.Length;
+                            file.Read(bytes, 0, (int)file.Length);
+                            ms.Write(bytes, 0, (int)file.Length);
+                        }
+                        
+                        //text = "data:application/octet-stream;base64," + Convert.ToBase64String(ms.ToArray(), "application/zip");
+                        text = Convert.ToBase64String(ms.ToArray());
+                        int len2 = text.Length;
+                            //"application/zip"); ; ; ; // ;// ;
+
+                    }
+                }
+                else
+                {
+                    string path = Path.Combine(fpath, FileName);
+                    path = path.Replace("\\\\", "\\");
+                    text = System.IO.File.ReadAllText(path);
+                }
             }
             return text;
         }

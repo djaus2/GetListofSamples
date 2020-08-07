@@ -26,6 +26,7 @@ namespace ProjectClasses
                 AllProjects = new List<Project>();
             AllProjects.Add(this);
             ProjectCSFileNames = new List<string>();
+            OtherCSFileNames = new List<string>();
         }
 
         int FolderTree { get; set; }
@@ -126,6 +127,7 @@ namespace ProjectClasses
             }
         }
         public List<string> ProjectCSFileNames { get; set; }
+        public List<string> OtherCSFileNames { get; set; }
         //public string ProjectCSFileName_WithoutText
         //{ 
         //    get {

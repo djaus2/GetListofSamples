@@ -1,0 +1,56 @@
+﻿<!-- ZipComponent.razor -->
+@inject IJSRuntime JSRuntime
+@inject Services.SamplesClient _SamplesClient
+@inject IJSRuntime JSRuntime
+@using System.IO
+
+@using Services
+<button type="button" class="btn btn-primary" @onclick="DownloadZipFile">Download folder ZIP</button>
+@code {
+    [Parameter]
+    public int FolderId { get; set; }
+
+    public string showFilename { get; set; } = "";
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        ProjectClasses.FolderTree Folder = SamplesClient.FolderDict[FolderId];
+
+        showFilename = $"{Folder.FolderName}.zip";
+    }
+
+
+
+    async Task DownloadZipFile()
+    {
+        string Text = showFilename;
+        string param = $"{showFilename}~{FolderId}";
+        string Filecontents = await _SamplesClient.GetFile(param);
+        int fcLen = Filecontents.Length;
+        var bytes = System.Text.Encoding.UTF8.GetBytes(Filecontents);
+        byte[] bytes2 = Convert.FromBase64String(Filecontents);
+        int len = bytes2.Length;
+        await FileUtil.SaveAs(JSRuntime, showFilename, bytes2);
+
+        //var fc2 = Filecontents.Replace("data:application/octet-stream;base64,", "");
+        //var fc3 = fc2.Substring(0, fc2.Length - 1);
+        //var xx = Convert.FromBase64String(fc2);
+        //await FileUtil.SaveAsZip(JSRuntime, showFilename, xx);
+
+        //using (MemoryStream ms = new MemoryStream()
+        //{
+        //    Convert.FromBase64String(Filecontents)
+        //    using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
+        //{
+        //    byte[] bytes = new byte[file.Length];
+        //    file.Read(bytes, 0, (int)file.Length);
+        //    ms.Write(bytes, 0, (int)file.Length);
+        //}
+        //text = "data:application/octet-stream;base64," + Convert.ToBase64String(ms.ToArray());
+        //}
+    }
+
+
+}

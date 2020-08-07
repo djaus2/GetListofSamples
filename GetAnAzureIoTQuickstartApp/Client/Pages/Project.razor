@@ -6,17 +6,23 @@
 @inject NavigationManager navigationManager
 <h1>Hello, world!</h1>
 <table border="1">
-    <tr><td><b><i>Project/s:</i></b></td><td>
-    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@Proj.ProjectFileName))"><b><i>@Proj.ProjectFileName</i></b></button>
-</td></tr>
+    <tr>
+        <td><b><i>Project/s:</i></b></td>
+        <td>
+            <button class="btn btn-primary" @onclick="@(e =>  GetFile(@Proj.ProjectFileName))"><b><i>@Proj.ProjectFileName</i></b></button>
+        </td>
+    </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
-    @foreach  (var filename in Proj.ProjectCSFileNames)
+    @foreach (var filename in Proj.ProjectCSFileNames)
     {
         @if (filename == Proj.ProjectCSFileNames[0])
         {
-            <tr><td><b><i>Source Files:</i></b></td><td>
-            <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
-            </td></tr>
+            <tr>
+                <td><b><i>Source Files:</i></b></td>
+                <td>
+                    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
         }
         else
         {
@@ -30,6 +36,35 @@
         }
 
     }
+    @foreach (var filename in Proj.OtherCSFileNames)
+    {
+        @if (filename == Proj.OtherCSFileNames[0])
+        {
+            <tr>
+                <td><b><i>Source Files:</i></b></td>
+                <td>
+                    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+
+        }
+    }
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td><b><i>@ZipFileName:</i></b></td>
+        <td>
+            <ZipComponent FolderId=@Folder.Id />
+        </td>
+    </tr>
 </table>
 
 <ClipBoardComponent Text=@TextToCopy Filename=@FileName />
@@ -41,6 +76,7 @@
 
     public string TextToCopy { get; set; } = "";
     public string FileName { get; set; } = "";
+    public string ZipFileName { get; set; } = "";
 
     ProjectClasses.FolderTree Folder;
     ProjectClasses.Project Proj;
@@ -51,6 +87,8 @@
         int id = int.Parse(Id);
         Folder = SamplesClient.FolderDict[id];
         Proj = SamplesClient.ProjectDict[Folder.Projects.First()];
+        ZipFileName = $"{Folder.FolderName}.zip";
+        StateHasChanged();
     }
 
     bool FirstRender = false;
