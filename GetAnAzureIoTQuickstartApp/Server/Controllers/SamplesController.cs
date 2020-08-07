@@ -87,14 +87,16 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
                         using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
                         {
                             byte[] bytes = new byte[file.Length];
-                            int len1 = bytes.Length;
                             file.Read(bytes, 0, (int)file.Length);
                             ms.Write(bytes, 0, (int)file.Length);
                         }
-                        
-                        //text = "data:application/octet-stream;base64," + Convert.ToBase64String(ms.ToArray(), "application/zip");
+
+                        // Ref: https://docs.microsoft.com/en-us/dotnet/api/system.convert.tobase64string?view=netcore-3.1
+                        // Look for example under ToBase64(Byte[], Base64FormattingOPetion)
+                        // It does a Convert.ToBase64String followed by Covert.FromBas64String
+                        // Note: No data type strings as used with images
+
                         text = Convert.ToBase64String(ms.ToArray());
-                        int len2 = text.Length;
                             //"application/zip"); ; ; ; // ;// ;
 
                     }

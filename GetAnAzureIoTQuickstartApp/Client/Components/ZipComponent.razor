@@ -22,34 +22,18 @@
     }
 
 
+    // Ref: https://docs.microsoft.com/en-us/dotnet/api/system.convert.tobase64string?view=netcore-3.1
+    // Look for example under ToBase64(Byte[], Base64FormattingOPetion)
+    // It does a Convert.ToBase64String followed by Covert.FromBas64String
+    // Note: No data type strings as used with images
 
     async Task DownloadZipFile()
     {
         string Text = showFilename;
         string param = $"{showFilename}~{FolderId}";
         string Filecontents = await _SamplesClient.GetFile(param);
-        int fcLen = Filecontents.Length;
-        var bytes = System.Text.Encoding.UTF8.GetBytes(Filecontents);
-        byte[] bytes2 = Convert.FromBase64String(Filecontents);
-        int len = bytes2.Length;
-        await FileUtil.SaveAs(JSRuntime, showFilename, bytes2);
-
-        //var fc2 = Filecontents.Replace("data:application/octet-stream;base64,", "");
-        //var fc3 = fc2.Substring(0, fc2.Length - 1);
-        //var xx = Convert.FromBase64String(fc2);
-        //await FileUtil.SaveAsZip(JSRuntime, showFilename, xx);
-
-        //using (MemoryStream ms = new MemoryStream()
-        //{
-        //    Convert.FromBase64String(Filecontents)
-        //    using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
-        //{
-        //    byte[] bytes = new byte[file.Length];
-        //    file.Read(bytes, 0, (int)file.Length);
-        //    ms.Write(bytes, 0, (int)file.Length);
-        //}
-        //text = "data:application/octet-stream;base64," + Convert.ToBase64String(ms.ToArray());
-        //}
+        byte[] bytes = Convert.FromBase64String(Filecontents);
+        await FileUtil.SaveAs(JSRuntime, showFilename, bytes);
     }
 
 
