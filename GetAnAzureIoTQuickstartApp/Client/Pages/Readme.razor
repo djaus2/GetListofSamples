@@ -1,0 +1,56 @@
+﻿@page "/readme/{Id}"
+@using GetAnAzureIoTQuickstartApp.Shared
+@using ProjectClasses
+@using GetAnAzureIoTQuickstartApp.Client.Components
+@inject HttpClient Http
+@inject Services.SamplesClient _SamplesClient
+@inject NavigationManager navigationManager
+@using  GetAnAzureIoTQuickstartApp.Client.Services;
+
+<h3>Project Read Me</h3>
+<table>
+    <tr><td align="right"><b><i>Folder Name:</i></b></td><td><h1>@Folder.FolderName</h1></td></tr>
+    <tr><td align="right"><b><i>Read Me:</i></b></td><td>@readmePath</td></tr>
+</table>
+
+<br />
+<MarkdownModel Content=@TextToCopy />
+<br />
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    ProjectClasses.FolderTree Folder { get; set; }
+    string readmePath { get; set; }
+    string TextToCopy { get; set; }
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+    }
+
+
+    //bool done = false;
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        int id = int.Parse(Id);
+
+
+        Folder = SamplesClient.FolderDict[id];
+        readmePath = Folder.ReadMes[0]; //Assume at least one and only one. Nav to here requires the first part to be true
+        string folderReadMe = $"{readmePath}~{id}";
+        TextToCopy = await _SamplesClient.GetFile(folderReadMe);
+        StateHasChanged();
+    }
+}
+
+}
+
+
+
+
+}

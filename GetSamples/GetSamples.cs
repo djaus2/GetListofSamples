@@ -47,12 +47,9 @@ namespace GetSamples
                     RelativePath = localPath,
                     FullPath = fp
                 };
-                //Assuming one project per folder. Not true for dotnet/iot
                 string[] csFiles = Directory.GetFiles(path, "*.cs");
                 foreach (var cs in csFiles)
                 {
-                    var cslnlocalPath = cs.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
-
                     var csShort = Path.GetFileName(cs);
                     proj.ProjectCSFileNames.Add(csShort);
                 }
@@ -62,21 +59,21 @@ namespace GetSamples
             string[] solutions = Directory.GetFiles(path, "*.sln");
             foreach (var sln in solutions)
             {
-                var slnlocalPath = sln.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
-
-
                 Folder.Solutions.Add(sln);
-                //Folder.LocalSolutions.Add(slnlocalPath);
             }
 
             string[] readmes = Directory.GetFiles(path, "*.md");
             foreach (var readme in readmes)
             {
-                //var slnlocalPath = sln.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
-
                 string readmeShort = Path.GetFileName(readme);
                 Folder.ReadMes.Add(readmeShort);
-                //Folder.LocalSolutions.Add(slnlocalPath);
+            }
+
+            string[] images = Directory.GetFiles(path, "*.png");
+            foreach (var image in images)
+            {
+                string imageShort = Path.GetFileName(image);
+                Folder.ReadMes.Add(imageShort);
             }
 
 

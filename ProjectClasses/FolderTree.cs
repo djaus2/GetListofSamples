@@ -34,6 +34,7 @@ namespace ProjectClasses
             Projects = new List<int>();
             Solutions = new List<string>();
             ReadMes = new List<string>();
+            Images = new List<string>();
             if (AllFolderTrees == null)
                 AllFolderTrees = new List<FolderTree>();
             AllFolderTrees.Add(this);
@@ -51,6 +52,7 @@ namespace ProjectClasses
         public List<int> Projects { get; set; }
         public List<string> Solutions { get; set; }
         public List<string> ReadMes { get; set; }
+        public List<string> Images { get; set; }
 
         [JsonIgnore]
         public List<string> SolutionNames

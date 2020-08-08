@@ -78,14 +78,16 @@
         {
             @foreach (string readme in Folder.ReadMes)
             {
-                <tr>
-                    @for (int i = 0; i < Folder.Depth + 4; i++)
-                    {
-                        <td></td>  
-                    }
-                    <td colspan="2"><a href="/readme/@readme">@readme</a></td>
-                    <td></td>
-                </tr>
+<tr>
+    @for (int i = 0; i < Folder.Depth + 3; i++)
+    {
+        <td></td>
+
+    }
+    <td colspan="2"><a href="/readme/@Folder.Id"><font color="crimson">@readme</font></a></td>
+
+    <td></td>
+</tr>
              }
         }
         @if (Folder.Solutions.Count > 0)
@@ -161,6 +163,13 @@
     protected void GoToProject(int id)
     {
         string target = $"/Project/{id}";
+
+        navigationManager.NavigateTo(target);
+    }
+
+    protected void GoToReadMe(int id)
+    {
+        string target = $"/Readme/{id}";
 
         navigationManager.NavigateTo(target);
     }
