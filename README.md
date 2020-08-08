@@ -39,7 +39,7 @@ Set for .NET IoT SDK repository
 - Coming: Display an image in folder
 
 ## Non Breaking Assumptions:
-- Only only one or less image files in folder. Ignores all bar first
+- Only one or less image files in folder. Ignores all bar first
 - Only one .md or less in folder. Ignores all bar first
 
 ## What If
