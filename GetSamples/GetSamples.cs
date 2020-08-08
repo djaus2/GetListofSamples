@@ -69,6 +69,16 @@ namespace GetSamples
                 //Folder.LocalSolutions.Add(slnlocalPath);
             }
 
+            string[] readmes = Directory.GetFiles(path, "*.md");
+            foreach (var readme in readmes)
+            {
+                //var slnlocalPath = sln.Replace(@"C:\Users\david\Downloads\azure-iot-samples-csharp-master_src\azure-iot-samples-csharp-master\", "");
+
+                string readmeShort = Path.GetFileName(readme);
+                Folder.ReadMes.Add(readmeShort);
+                //Folder.LocalSolutions.Add(slnlocalPath);
+            }
+
 
 
             string[] dirs = Directory.GetDirectories(

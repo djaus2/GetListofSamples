@@ -58,6 +58,28 @@
 
         }
     }
+    @foreach (var filename in Folder.ReadMes)
+    {
+        @if (filename == Folder.ReadMes[0])
+        {
+            <tr>
+                <td><b><i>ReadMe Files:</i></b></td>
+                <td>
+                    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+
+        }
+    }
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
         <td><b><i>@ZipFileName:</i></b></td>
@@ -67,15 +89,17 @@
     </tr>
 </table>
 
-<ClipBoardComponent Text=@TextToCopy Filename=@FileName />
+<ClipBoardComponent Text=@TextToCopy Filename=@ShowFileName />
 
 @code
 {
     [Parameter]
     public string Id { get; set; }
 
+    public string ShowFileName { get; set; }
+
     public string TextToCopy { get; set; } = "";
-    public string FileName { get; set; } = "";
+    //public string FileName { get; set; } = "";
     public string ZipFileName { get; set; } = "";
 
     ProjectClasses.FolderTree Folder;
@@ -83,10 +107,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         await base.OnInitializedAsync();
         int id = int.Parse(Id);
         Folder = SamplesClient.FolderDict[id];
         Proj = SamplesClient.ProjectDict[Folder.Projects.First()];
+        string fn = Proj.ProjectFileName;
+        await GetFile(fn);
+        ShowFileName = fn;
         ZipFileName = $"{Folder.FolderName}.zip";
         StateHasChanged();
     }
@@ -97,8 +125,8 @@
         if (firstRender)
         {
             base.OnAfterRender(firstRender);
-            FileName = Proj.ProjectFileName;
-            TextToCopy = "Copy me!nnnnnnnnnnnnnnnnnnnnnnnnnnn\nnnnnnnnn\n\rnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn";
+            //FileName = Proj.ProjectFileName;
+            //TextToCopy = "File contents here.";
             StateHasChanged();
         }
     }
@@ -106,9 +134,12 @@
     string Filecontents;
     async Task  GetFile(string filename)
     {
+        ShowFileName = filename;
         string param = $"{filename}~{Folder.Id}";
         Filecontents = await _SamplesClient.GetFile(param);
-        TextToCopy = "<!-- " + Proj.ProjectFileName_WithoutText + "-->" + "\n" + Filecontents;
+        TextToCopy = Filecontents;
+        // = "<!-- " + Proj.ProjectFileName_WithoutText + "-->" + "\n" + Filecontents;
+        //TextToCopy = "// " + Proj.ProjectFileName_WithoutText + "\n" + Filecontents;
         StateHasChanged();
     }
 }

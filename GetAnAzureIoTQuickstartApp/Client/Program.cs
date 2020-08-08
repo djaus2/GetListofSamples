@@ -28,22 +28,4 @@ namespace GetAnAzureIoTQuickstartApp.Client
 
         }
     }
-
-    public static class FileUtil
-    {
-        public async static Task SaveAs(IJSRuntime js, string filename, byte[] data)
-        {
-            await js.InvokeAsync<object>(
-                "saveAsFile",
-                filename,
-                Convert.ToBase64String(data));
-        }
-
-        public async static Task SaveAsZip(IJSRuntime js, string filename, byte[] data)
-        {
-            await js.InvokeAsync<object>(
-                "saveAsZipFile",
-                filename);
-        }
-    }
 }

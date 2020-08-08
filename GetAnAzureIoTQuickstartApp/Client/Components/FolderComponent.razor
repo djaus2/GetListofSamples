@@ -10,43 +10,43 @@
     }
     else
     {
-<tr>
+        <tr>
 
-    <td>@Folder.Children.Count</td>
-    <td>@Folder.Projects.Count</td>
-    <td>@Folder.Solutions.Count</td>
-    @for (int i = 0; i < Folder.Depth; i++)
-    {
-        <td></td>
-    }
-    @if (Folder.Depth == 0)
-    {
-        <td colspan="2"><button id=@Folder.FolderName class="btn btn-primary" @onclick=@SampleMe><h2>@Folder.FolderName</h2></button></td>
-    }
-    else
-    {
-        @if (@Folder.HasChildren)
-        {
-            @if (Folder.Depth == 1)
+            <td>@Folder.Children.Count</td>
+            <td>@Folder.Projects.Count</td>
+            <td>@Folder.Solutions.Count</td>
+            @for (int i = 0; i < Folder.Depth; i++)
             {
-                <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button></td>
+                <td></td>
+            }
+            @if (Folder.Depth == 0)
+            {
+                <td colspan="2"><button id=@Folder.FolderName class="btn btn-primary" @onclick=@SampleMe><h2>@Folder.FolderName</h2></button></td>
             }
             else
             {
-                <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button></td>
+                @if (@Folder.HasChildren)
+                {
+                    @if (Folder.Depth == 1)
+                    {
+                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button></td>
+                    }
+                    else
+                    {
+                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button></td>
+                    }
+                }
+                else
+                {
+                    <td colspan="2">
+                        <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">
+                            <b>@Folder.FolderName</b>
+                        </button>
+                    </td>
+                }
             }
-        }
-        else
-        {
-            <td colspan="2">
-                <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">
-                    <b>@Folder.FolderName</b>
-                </button>
-            </td>
-        }
-    }
-    <td></td>
-</tr>
+            <td></td>
+        </tr>
 
         @if (Folder.Projects.Count > 0)
         {
@@ -74,18 +74,32 @@
             }
 
         }
+        @if ((Folder.ReadMes.Count > 0) && (Folder.Depth !=0))
+        {
+            @foreach (string readme in Folder.ReadMes)
+            {
+                <tr>
+                    @for (int i = 0; i < Folder.Depth + 4; i++)
+                    {
+                        <td></td>  
+                    }
+                    <td colspan="2"><a href="/readme/@readme">@readme</a></td>
+                    <td></td>
+                </tr>
+             }
+        }
         @if (Folder.Solutions.Count > 0)
         {
             @foreach (string f1s in Folder.SolutionNames)
             {
-<tr>
-    @for (int i = 0; i < Folder.Depth + 3; i++)
-    {
-        <td></td>
-    }
-    <td colspan="2"><font color="green">@f1s</font>&nbsp;<ZipComponent  FolderId=@Folder.Id /></td>
-    <td></td>
-</tr>
+                <tr>
+                    @for (int i = 0; i < Folder.Depth + 3; i++)
+                    {
+                        <td></td>
+                    }
+                    <td colspan="2"><font color="green">@f1s</font>&nbsp;<ZipComponent FolderId=@Folder.Id /></td>
+                    <td></td>
+                </tr>
             }
         }
 
@@ -142,11 +156,6 @@
     {
         LowerIsViz = !LowerIsViz;
         StateHasChanged();
-    }
-
-    protected void ZipFolder(MouseEventArgs e)
-    {
-
     }
 
     protected void GoToProject(int id)

@@ -1,7 +1,6 @@
 ﻿<!-- ZipComponent.razor -->
 @inject IJSRuntime JSRuntime
 @inject Services.SamplesClient _SamplesClient
-@inject IJSRuntime JSRuntime
 @using System.IO
 
 @using Services
@@ -34,6 +33,17 @@
         string Filecontents = await _SamplesClient.GetFile(param);
         byte[] bytes = Convert.FromBase64String(Filecontents);
         await FileUtil.SaveAs(JSRuntime, showFilename, bytes);
+    }
+
+    public static class FileUtil
+    {
+        public async static Task SaveAs(IJSRuntime js, string filename, byte[] data)
+        {
+            await js.InvokeAsync<object>(
+                "saveAsFile",
+                filename,
+                Convert.ToBase64String(data));
+        }
     }
 
 
