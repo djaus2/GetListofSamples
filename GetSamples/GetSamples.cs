@@ -69,13 +69,13 @@ namespace GetSamples
                 Folder.ReadMes.Add(readmeShort);
             }
 
-            //jpg", "jpeg", "png", "gif", "tiff", "bmp
-            var images = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)
-            .Where(s => s.EndsWith(".png") || s.EndsWith(".jpg") || s.EndsWith(".jpeg") || s.EndsWith(".gif") || s.EndsWith(".bmp"));
+            //jpg", "jpeg", "png", "gif", "tiff", "bmp","png"
+            var images = Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+            .Where(s => s.EndsWith(".png") || s.EndsWith(".jpg") || s.EndsWith(".jpeg") || s.EndsWith(".gif") || s.EndsWith(".bmp")||s.EndsWith(".png"));
             foreach (var image in images)
             {
                 string imageShort = Path.GetFileName(image);
-                Folder.ReadMes.Add(imageShort);
+                Folder.Images.Add(imageShort);
             }
 
 

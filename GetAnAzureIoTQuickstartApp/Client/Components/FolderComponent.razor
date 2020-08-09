@@ -15,6 +15,8 @@
             <td>@Folder.Children.Count</td>
             <td>@Folder.Projects.Count</td>
             <td>@Folder.Solutions.Count</td>
+            <td>@Folder.ReadMes.Count</td>
+            <td>@Folder.Images.Count</td>
             @for (int i = 0; i < Folder.Depth; i++)
             {
                 <td></td>
@@ -47,77 +49,82 @@
             }
             <td></td>
         </tr>
-
-        @if (Folder.Projects.Count > 0)
+        @if (true)
         {
-            @foreach (int f1p in Folder.Projects)
+            @if (Folder.Depth > 0)
             {
-                <tr>
-                    @for (int i = 0; i < Folder.Depth + 4; i++)
-                    {
-                        <td></td>
-                    }
-                    <td colspan="2"><a href="/samples/@f1p">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
-                    <td></td>
-                </tr>
-                @foreach (string csFileName in SamplesClient.ProjectDict[f1p].ProjectCSFileNames)
+                @if (Folder.Projects.Count > 0)
                 {
-                    <tr>
-                        @for (int i = 0; i < Folder.Depth + 4; i++)
-                        {
+                    @foreach (int f1p in Folder.Projects)
+                    {
+                        <tr>
+                            @for (int i = 0; i < Folder.Depth + 6; i++)
+                            {
+                                <td></td>
+                            }
+                            <td colspan="2"><a href="/samples/@f1p">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
                             <td></td>
+                        </tr>
+                        @foreach (string csFileName in SamplesClient.ProjectDict[f1p].ProjectCSFileNames)
+                        {
+                            <tr>
+                                @for (int i = 0; i < Folder.Depth + 6; i++)
+                                {
+                                    <td></td>
+                                }
+                                <td colspan="2"><a href="/samples/@f1p"><font color="brown">@csFileName</font></a></td>
+                                <td></td>
+                            </tr>
                         }
-                        <td colspan="2"><a href="/samples/@f1p"><font color="brown">@csFileName</font></a></td>
-                        <td></td>
-                    </tr>
+                    }
+
                 }
-            }
-
-        }
-        @if (Folder.Solutions.Count > 0)
-        {
-            @foreach (string f1s in Folder.SolutionNames)
-            {
-                <tr>
-                    @for (int i = 0; i < Folder.Depth + 3; i++)
+                @if (Folder.Solutions.Count > 0)
+                {
+                    @foreach (string f1s in Folder.SolutionNames)
                     {
-                        <td></td>
+                        <tr>
+                            @for (int i = 0; i < Folder.Depth + 5; i++)
+                            {
+                                <td></td>
+                            }
+                            <td colspan="2"><font color="green">@f1s</font>&nbsp;<ZipComponent FolderId=@Folder.Id /></td>
+                            <td></td>
+                        </tr>
                     }
-                    <td colspan="2"><font color="green">@f1s</font>&nbsp;<ZipComponent FolderId=@Folder.Id /></td>
-                    <td></td>
-                </tr>
-            }
-        }
-        @if ((Folder.ReadMes.Count > 0) && (Folder.Depth != 0))
-        {
-            @foreach (string readme in Folder.ReadMes)
-            {
-                <tr>
-                    @for (int i = 0; i < Folder.Depth + 3; i++)
+                }
+                @if ((Folder.ReadMes.Count > 0))
+                {
+                    @foreach (string readme in Folder.ReadMes)
                     {
-                        <td></td>
+                        <tr>
+                            @for (int i = 0; i < Folder.Depth + 5; i++)
+                            {
+                                <td></td>
 
+                            }
+                            <td colspan="2"><a href="/readme/@Folder.Id"><font color="crimson">@readme</font></a></td>
+
+                            <td></td>
+                        </tr>
                     }
-                    <td colspan="2"><a href="/readme/@Folder.Id"><font color="crimson">@readme</font></a></td>
-
-                    <td></td>
-                </tr>
-            }
-        }
-        @if ((Folder.Images.Count > 0) && (Folder.Depth != 0))
-        {
-            @foreach (string image in Folder.Images)
-            {
-                <tr>
-                    @for (int i = 0; i < Folder.Depth + 3; i++)
+                }
+                @if ((Folder.Images.Count > 0))
+                {
+                    @foreach (string image in Folder.Images)
                     {
-                        <td></td>
+                        <tr>
+                            @for (int i = 0; i < Folder.Depth + 5; i++)
+                            {
+                                <td></td>
 
+                            }
+                        <td><a href="/circuit/@Folder.Id/@image"><font color="blue">@image</font></a></td>
+
+                            <td></td>
+                        </tr>
                     }
-                    <td colspan="2"><a href="/circuit/@Folder.Id/image"><font color="azure">@image</font></a></td>
-
-                    <td></td>
-                </tr>
+                }
             }
         }
 
@@ -137,7 +144,7 @@
     [Parameter]
     public bool IsViz { get { return Visibility; } set { Visibility = value; } }
 
-
+    public bool DetailIsViz { get; set; } = false;
 
     bool _Visibility = false;
     public bool Visibility { get { return _Visibility; } set { _Visibility = value; StateHasChanged(); } }
@@ -174,6 +181,7 @@
     protected void SampleMe(MouseEventArgs e)
     {
         LowerIsViz = !LowerIsViz;
+        DetailIsViz = LowerIsViz;
         StateHasChanged();
     }
 

@@ -11,6 +11,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -66,13 +67,38 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
             string[] names = param.Split(new char[] { '~' });
             string FileName = names[0];
             string FolderId = names[1];
+            string FileType = "";
+            if (names.Length > 2)
+                FileType = names[2];
             int foldId;
             if (int.TryParse(FolderId, out foldId))
             {
                 var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
                 var folder = fld.First();
                 string fpath = folder.FolderPath;
-                if (FileName.Contains(".zip"))
+                if (FileType == "Image")
+                {
+                    string path = Path.Combine(fpath, FileName);
+                    path = path.Replace("\\\\", "\\");
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (Bitmap qrCodeImage = new Bitmap(path))
+                        {
+                            //string extension = Path.GetExtension(FileName);
+                            var imgInput = System.Drawing.Image.FromFile(path);
+                            var thisFormat = imgInput.RawFormat;
+                            UInt32 width = (UInt32) imgInput.Width;
+                            int height = imgInput.Height;
+                            if (width > 800)
+                                width = 800;
+                            qrCodeImage.Save(ms, thisFormat);// ImageFormat.Png);
+                            
+                            text = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                            //text += Convert.ToBase64String(BitConverter.GetBytes(width));
+                        }
+                    }
+                }
+                else if (FileName.Contains(".zip"))
                 {
                     string zipPath = $".\\Downloads\\{FileName}";
                     if (!System.IO.File.Exists(zipPath))

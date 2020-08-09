@@ -1,0 +1,55 @@
+﻿@page "/circuit/{FolderId}/{Image}"
+@inject HttpClient Http
+@using GetAnAzureIoTQuickstartApp.Client.Services
+@using GetAnAzureIoTQuickstartApp.Client.Components
+@inject Services.SamplesClient _SamplesClient
+@inject IJSRuntime JSRuntime
+
+
+<h3>Device Sample Project</h3>
+<h1>Project Circuit</h1>
+
+<table>
+    <tr><td align="right"><b><i>Project Name:</i></b></td><td><h1>@Folder.FolderName</h1></td></tr>
+    <tr><td align="right"><b><i>Device:</i></b></td><td>@Image</td></tr>
+</table>
+<br />
+<img src="@ImageInfo" style="width:1000px;" />
+<br />
+
+
+@code {
+    [Parameter]
+    public string FolderId { get; set; }
+
+    [Parameter]
+    public string Image { get; set; }
+
+    ProjectClasses.FolderTree Folder { get; set; }
+    string ImageInfo { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+    }
+
+
+    //bool done = false;
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        int id = int.Parse(FolderId);
+
+        int folderId = int.Parse(FolderId);
+        Folder = SamplesClient.FolderDict[folderId];
+        string DeviceNameProjectName = $"{Image}~{FolderId}~Image";
+
+        ImageInfo = await _SamplesClient.GetFile(DeviceNameProjectName);
+        StateHasChanged();
+    }
+
+    }
+}
+
+
+}
