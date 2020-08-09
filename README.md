@@ -18,7 +18,7 @@ Data Structures:
 - List of FolderTrees
 - List of Projects
 - List of Markdown files
-- List of Images (Coming)
+- List of Images
 - FolderTree Ids used in Parent and Children property lists
 - Project Ids used in FolderTree Project lists
 
@@ -36,7 +36,7 @@ Set for .NET IoT SDK repository
 - Zip folder on server and download
 - Download text (.cs or .csproj) on server and display
   - Can then copy or download it
-- Coming: Display an image in folder
+- Display an image in folder
 
 ## Non Breaking Assumptions:
 - Only one or less image files in folder. Ignores all bar first
