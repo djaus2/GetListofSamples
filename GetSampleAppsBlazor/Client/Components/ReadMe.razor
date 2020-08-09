@@ -1,0 +1,44 @@
+﻿@* @page "/BlazorComponent/{Title}" Uncomment if you want Component to be available via URL *@
+@using GetSampleApps.Shared
+@using ProjectClasses
+@using Components
+@using Services
+@inject HttpClient Http
+@inject SamplesClient _SamplesClient
+@inject NavigationManager navigationManager
+
+
+<br />
+<MarkdownModel Content=@TextToCopy />
+<br />
+
+
+@code {
+    [Parameter]
+    public string FolderId { get; set; }
+
+    [Parameter]
+    public string MarkdownFilename { get; set; }
+
+    ProjectClasses.FolderTree Folder { get; set; }
+    string TextToCopy { get; set; }
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+    }
+
+
+    //bool done = false;
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        int id = int.Parse(FolderId);
+
+        string folderReadMe = $"{MarkdownFilename}~{id}~md";
+        TextToCopy = await _SamplesClient.GetFile(folderReadMe);
+        StateHasChanged();
+    }
+}
+

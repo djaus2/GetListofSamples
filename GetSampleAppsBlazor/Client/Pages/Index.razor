@@ -1,0 +1,359 @@
+﻿@page "/index"
+@using GetSampleApps.Shared
+@using ProjectClasses
+@using Services
+@using GetSampleApps.Client.Components
+@inject HttpClient Http
+@inject SamplesClient _SamplesClient
+@inject NavigationManager navigationManager
+
+<h3>Sample Apps</h3>
+<h2>Index</h2>
+
+<br />
+@if (RootFolder == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table>
+        <thead><tr><th>C</th><th>P</th><th>S</th><th>R</th><th>I</th></tr></thead>
+        <FolderComponent folder=@RootFolder.Id />
+    </table>
+    @*<table>
+
+            <tr><td>@RootFolder.Children.Count</td><td>@RootFolder.Projects.Count</td><td>@RootFolder.FolderName</td></tr>
+        @foreach (int f1 in RootFolder.Children)
+        {
+            FolderTree folder1 = FolderDict[f1];
+            <tr><td>@folder1.Children.Count</td><td>@folder1.Projects.Count</td><td>.</td><td>@folder1.FolderName</td><td>.</td><td>.</td><td>.</td></tr>
+            @if (folder1.Projects.Count > 0)
+            {
+                @foreach (int f1p in folder1.Projects)
+                {
+                    <tr>
+                        <td>.</td>
+                        <td>.</td>
+                        <td>.</td>
+                        <td><a href="/samples/@f1p">@folder1.FolderName Sample App</a></td>
+                    </tr>
+                }
+                @if (folder1.Solutions.Count > 0)
+                {
+                    @foreach (string f1s in folder1.SolutionNames)
+                    {
+                        <tr>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>@f1s</td>
+                        </tr>
+                    }
+                }
+            }
+            @foreach (int f2 in folder1.Children)
+            {
+                FolderTree folder2 = FolderDict[f2];
+                <tr>
+                    <td>@folder2.Children.Count</td>
+                    <td>@folder2.Projects.Count</td>
+                    <td>.</td>
+                    <td>.</td>
+                    @if (folder2.Projects.Count > 0)
+                    {
+                        <td><b><font color="blue">@folder2.FolderName</font></b></td>
+                    }
+                    else
+                    {
+                        <td>@folder2.FolderName</td>
+                    }
+                </tr>
+                @if (folder2.Projects.Count > 0)
+                {
+                    @foreach (int f2p in folder2.Projects)
+                    {
+                        <tr>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>.</td>
+                            <td><a href="/samples/@f2p">@folder2.FolderName Sample App</a></td>
+                        </tr>
+                    }
+                    @if (folder2.Solutions.Count > 0)
+                    {
+                        @foreach (string f2s in folder2.SolutionNames)
+                        {
+                            <tr>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>@f2s</td>
+                            </tr>
+                        }
+                    }
+                }
+
+                @foreach (int f3 in folder2.Children)
+                {
+                    FolderTree folder3 = FolderDict[f3];
+                    <tr>
+                        <td>@folder3.Children.Count</td>
+                        <td>@folder3.Projects.Count</td>
+                        <td>.</td>
+                        <td>.</td>
+                        <td>.</td>
+                        @if (folder3.Projects.Count > 0)
+                        {
+                            <td><b><font color="blue">@folder3.FolderName</font></b></td>
+                        }
+                        else
+                        {
+                            <td>@folder3.FolderName</td>
+                        }
+                    </tr>
+                    @if (folder3.Projects.Count > 0)
+                    {
+                        @foreach (int f3p in folder3.Projects)
+                        {
+                            <tr>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td><a href="/samples/@f3p">@folder3.FolderName Sample App</a></td>
+                            </tr>
+                        }
+                    }
+                    @if (folder3.Solutions.Count > 0)
+                    {
+                        @foreach (string f3s in folder3.SolutionNames)
+                        {
+                            <tr>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>@f3s</td>
+                            </tr>
+                        }
+                    }
+                    @foreach (int f4 in folder3.Children)
+                    {
+                        FolderTree folder4 = FolderDict[f4];
+                        <tr>
+                            <td>@folder4.Children.Count</td>
+                            <td>@folder4.Projects.Count</td>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>.</td>
+                            <td>.</td>
+                            @if (folder4.Projects.Count > 0)
+                            {
+                                <td><b><font color="blue">@folder4.FolderName</font></b></td>
+                            }
+                            else
+                            {
+                                <td>@folder4.FolderName</td>
+                            }
+                        </tr>
+                        @if (folder4.Projects.Count > 0)
+                        {
+                            @foreach (int f4p in folder4.Projects)
+                            {
+                                <tr>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td><a href="/samples/@f4p">@folder4.FolderName Sample App</a></td>
+                                </tr>
+                            }
+                        }
+                        @if (folder4.Solutions.Count > 0)
+                        {
+                            @foreach (string f4s in folder4.SolutionNames)
+                            {
+                                <tr>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>@f4s</td>
+                                </tr>
+                            }
+                        }
+                        @foreach (int f5 in folder4.Children)
+                        {
+                            FolderTree folder5 = FolderDict[f5];
+                            <tr>
+                                <td>@folder5.Children.Count</td>
+                                <td>@folder5.Projects.Count</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                <td>.</td>
+                                @if (folder5.Projects.Count > 0)
+                                {
+
+                                    <td><b><font color="blue">@folder5.FolderName</font></b></td>
+                                }
+                                else
+                                {
+                                    <td>@folder5.FolderName</td>
+                                }
+                            </tr>
+                            @if (folder5.Projects.Count > 0)
+                            {
+                                @foreach (int f5p in folder5.Projects)
+                                {
+                                    <tr>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td><a href="/samples/@f5p">@folder5.FolderName Sample App</a></td>
+                                    </tr>
+                                }
+                            }
+                            @if (folder5.Solutions.Count > 0)
+                            {
+                                @foreach (string f5s in folder5.SolutionNames)
+                                {
+                                    <tr>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>.</td>
+                                        <td>@f5s</td>
+                                    </tr>
+                                }
+                            }
+                            @foreach (int f6 in folder5.Children)
+                            {
+                                FolderTree folder6 = FolderDict[f6];
+                                <tr>
+                                    <td>@folder6.Children.Count</td>
+                                    <td>@folder6.Projects.Count</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    <td>.</td>
+                                    @if (folder6.Projects.Count > 0)
+                                    {
+                                        <td><b><font color="blue">@folder6.FolderName</font></b></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@folder6.FolderName</td>
+                                    }
+                                </tr>
+                                @if (folder6.Projects.Count > 0)
+                                {
+                                    @foreach (int f6p in folder6.Projects)
+                                    {
+                                        <tr>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td><a href="/samples/@f6p">@folder6.FolderName Sample App</a></td>
+                                        </tr>
+                                    }
+                                }
+                                @if (folder6.Solutions.Count > 0)
+                                {
+                                    @foreach (string f6s in folder6.SolutionNames)
+                                    {
+                                        <tr>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>.</td>
+                                            <td>@f6s</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        </table>*@
+}
+
+@code {
+
+
+    private List<FolderTree> Folders;
+    private FolderTree RootFolder = null;
+    public Dictionary<int, FolderTree> FolderDict { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Folders = (await _SamplesClient.Get()).ToList();
+        //Projects = _SamplesClient.Projects;
+        RootFolder = _SamplesClient.RootFolder;
+        FolderDict = SamplesClient.FolderDict;
+        RootFolder = Folders.FirstOrDefault();
+    }
+    /*
+        void SampleMe(char key)
+        {
+            bool done = false;
+            AlphaViz[key] = true;
+            if (AlphaViz.Keys.Contains(GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentIndex))
+            {
+                if (key == GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentIndex)
+                    done = true;
+                AlphaViz[GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentIndex] = false;
+                GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentIndex = '=';
+                GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentProject = null;
+            }
+            if (!done)
+            {
+                if (AlphaViz.Keys.Contains(key))
+                {
+                    GetAnAzureIoTQuickstartApp.Client.Services.SamplesClient.CurrentIndex = key;
+                    AlphaViz[key] = true;
+                }
+            }
+            StateHasChanged();
+        }*/
+
+    void SampleMe2(string device, string projectName)
+    {
+        string target = $"/device/{device}-{projectName}";
+
+        navigationManager.NavigateTo(target);
+    }
+}
+

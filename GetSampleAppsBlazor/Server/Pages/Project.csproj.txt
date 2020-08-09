@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp$$DOTNETVERSION$$</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Device.Gpio" Version="$$GPIOVERSION$$" />
+    <PackageReference Include="Iot.Device.Bindings" Version="$$GPIOVERSION$$" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,66 @@
+﻿@page "/projectfile"
+@using GetSampleApps.Shared
+@using ProjectClasses
+@using GetSampleApps.Client.Components
+@inject Services.SamplesClient _SamplesClient
+@inject NavigationManager navigationManager
+
+<h3>Simple Sample C# .NET Core Project File</h3>
+<br />
+Has dotnet-iot pacakages included.
+<br />
+Will include all C# source files in same folder.
+<hr />
+
+
+<table>
+    <tr><td><i>Project Name:&nbsp;</i><large><b>@ProjectFileName</b></large></td></tr>
+
+    <tr>
+        <td>
+            <input @bind="ProjectFileName">&nbsp;<button @onclick="OnClick">Update Project Name</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input @bind="DOTNETVERSION">&nbsp;<button @onclick="OnClick">Update .NET Core Version</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input @bind="GPIOVERSION">&nbsp;<button @onclick="OnClick">Update GPIO Package Versions</button>
+        </td>
+    </tr>
+</table>
+
+<ClipBoardComponent Text=@textToCopy Filename=@ProjectFileName />
+
+
+
+
+@code {
+    private string ProjectFileName { get; set; } = "ProjectFile.csproj";
+    public string filecontents;
+    public string textToCopy;
+
+    string DOTNETVERSION = "3.1";
+    string GPIOVERSION = "1.0.0";
+
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        filecontents = await _SamplesClient.GetFile("1~1~SampleProjectFile");
+        OnClick(null);
+    }
+
+    protected void OnClick(MouseEventArgs e)
+    {
+        textToCopy = $"<!--  {ProjectFileName}  -->\n{filecontents}";
+        textToCopy = textToCopy.Replace("$$GPIOVERSION$$", GPIOVERSION);
+        textToCopy = textToCopy.Replace("$$DOTNETVERSION$$", DOTNETVERSION);
+        StateHasChanged();
+    }
+}
