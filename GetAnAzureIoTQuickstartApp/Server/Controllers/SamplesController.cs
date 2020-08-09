@@ -70,16 +70,17 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
             string FileType = "";
             if (names.Length > 2)
                 FileType = names[2];
+            FileType = FileType.ToUpper();
             int foldId;
             if (int.TryParse(FolderId, out foldId))
             {
                 var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
                 var folder = fld.First();
                 string fpath = folder.FolderPath;
-                if (FileType == "Image")
+                string path = Path.Combine(fpath, FileName);
+                path = path.Replace("\\\\", "\\");
+                if (FileType == "IMAGE")
                 {
-                    string path = Path.Combine(fpath, FileName);
-                    path = path.Replace("\\\\", "\\");
                     using (MemoryStream ms = new MemoryStream())
                     {
                         using (Bitmap qrCodeImage = new Bitmap(path))
@@ -87,18 +88,18 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
                             //string extension = Path.GetExtension(FileName);
                             var imgInput = System.Drawing.Image.FromFile(path);
                             var thisFormat = imgInput.RawFormat;
-                            UInt32 width = (UInt32) imgInput.Width;
+                            UInt32 width = (UInt32)imgInput.Width;
                             int height = imgInput.Height;
                             if (width > 800)
                                 width = 800;
                             qrCodeImage.Save(ms, thisFormat);// ImageFormat.Png);
-                            
+
                             text = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
                             //text += Convert.ToBase64String(BitConverter.GetBytes(width));
                         }
                     }
                 }
-                else if (FileName.Contains(".zip"))
+                else if (FileType == "ZIP")
                 {
                     string zipPath = $".\\Downloads\\{FileName}";
                     if (!System.IO.File.Exists(zipPath))
@@ -123,45 +124,17 @@ namespace GetAnAzureIoTQuickstartApp.Server.Controllers
                         // Note: No data type strings as used with images
 
                         text = Convert.ToBase64String(ms.ToArray());
-                            //"application/zip"); ; ; ; // ;// ;
+                        //"application/zip"); ; ; ; // ;// ;
 
                     }
                 }
                 else
                 {
-                    string path = Path.Combine(fpath, FileName);
-                    path = path.Replace("\\\\", "\\");
                     text = System.IO.File.ReadAllText(path);
                 }
             }
             return text;
         }
-
-        /*
-        // GET api/<SamplesController>/5
-        [HttpGet("{ id} ")]
-        public string Get(int id)
-                    {
-                        return "value";
-                    }
-
-                    // POST api/<SamplesController>
-                    [HttpPost]
-                    public void Post([FromBody] string value)
-                    {
-                    }
-
-                    // PUT api/<SamplesController>/5
-                    [HttpPut("{id}")]
-                    public void Put(int id, [FromBody] string value)
-                    {
-                    }
-
-                    // DELETE api/<SamplesController>/5
-                    [HttpDelete("{id}")]
-                    public void Delete(int id)
-                    {
-                    } */
     }
-            
+          
 }

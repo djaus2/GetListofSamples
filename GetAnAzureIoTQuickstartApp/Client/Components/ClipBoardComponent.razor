@@ -64,7 +64,7 @@
         public async static Task SaveAsText(IJSRuntime js, string filename, byte[] data)
         {
             await js.InvokeAsync<object>(
-                "saveAsFile",
+                "saveFile",
                 filename,
                 Convert.ToBase64String(data));
         }

@@ -1,0 +1,37 @@
+﻿@page "/showimage/{FolderId}/{ImageFileName}"
+@inject HttpClient Http
+@using GetAnAzureIoTQuickstartApp.Client.Services
+@using GetAnAzureIoTQuickstartApp.Client.Components
+@inject Services.SamplesClient _SamplesClient
+@inject IJSRuntime JSRuntime
+
+
+<h2>Display Image in Folder</h2>
+
+<table>
+    <tr><td align="right"><b><i>Folder Name:</i></b></td><td><h1>@Folder.FolderName</h1></td></tr>
+    <tr><td align="right"><b><i>Image Filename::</i></b></td><td>@ImageFileName</td></tr>
+</table>
+<Image FolderId=@FolderId ImageFileName=@ImageFileName />
+
+
+@code {
+    [Parameter]
+    public string FolderId { get; set; }
+
+    [Parameter]
+    public string ImageFileName { get; set; }
+
+    ProjectClasses.FolderTree Folder { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        int folderId = int.Parse(FolderId);
+        Folder = SamplesClient.FolderDict[folderId];
+    }
+
+}
+
+

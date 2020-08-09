@@ -31,11 +31,23 @@
                 {
                     @if (Folder.Depth == 1)
                     {
-                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button></td>
+                        <td colspan="2">
+                            <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button>&nbsp;
+                            @if (Folder.Solutions.Count != 0)
+                            {
+                                <ZipComponent FolderId=@Folder.Id />
+                            }
+                        </td>
                     }
                     else
                     {
-                        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button></td>
+                        <td colspan="2">
+                            <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button>&nbsp;
+                            @if (Folder.Solutions.Count != 0)
+                            {
+                                <ZipComponent FolderId=@Folder.Id />
+                            }
+                        </td>
                     }
                 }
                 else
@@ -44,7 +56,13 @@
                         <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">
                             <b>@Folder.FolderName</b>
                         </button>
+                        &nbsp;
+                        @if (Folder.Solutions.Count != 0)
+                        {
+                            <ZipComponent FolderId=@Folder.Id />
+                        }
                     </td>
+
                 }
             }
             <td></td>
@@ -53,32 +71,6 @@
         {
             @if (Folder.Depth > 0)
             {
-                @if (Folder.Projects.Count > 0)
-                {
-                    @foreach (int f1p in Folder.Projects)
-                    {
-                        <tr>
-                            @for (int i = 0; i < Folder.Depth + 6; i++)
-                            {
-                                <td></td>
-                            }
-                            <td colspan="2"><a href="/samples/@f1p">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
-                            <td></td>
-                        </tr>
-                        @foreach (string csFileName in SamplesClient.ProjectDict[f1p].ProjectCSFileNames)
-                        {
-                            <tr>
-                                @for (int i = 0; i < Folder.Depth + 6; i++)
-                                {
-                                    <td></td>
-                                }
-                                <td colspan="2"><a href="/samples/@f1p"><font color="brown">@csFileName</font></a></td>
-                                <td></td>
-                            </tr>
-                        }
-                    }
-
-                }
                 @if (Folder.Solutions.Count > 0)
                 {
                     @foreach (string f1s in Folder.SolutionNames)
@@ -88,10 +80,36 @@
                             {
                                 <td></td>
                             }
-                            <td colspan="2"><font color="green">@f1s</font>&nbsp;<ZipComponent FolderId=@Folder.Id /></td>
+                            <td colspan="2"><font color="green"><a href="/sample/@Folder.Id/@f1s">@f1s</a></font></td>
                             <td></td>
                         </tr>
                     }
+                }
+                @if (Folder.Projects.Count > 0)
+                {
+                    @foreach (int f1p in Folder.Projects)
+                    {
+                        <tr>
+                            @for (int i = 0; i < Folder.Depth + 5; i++)
+                            {
+                                <td></td>
+                            }
+                            <td colspan="2"><a href="/sample/@Folder.Id/@SamplesClient.ProjectDict[f1p].ProjectFileName">@SamplesClient.ProjectDict[f1p].ProjectFileName</a></td>
+                            <td></td>
+                        </tr>
+                        @foreach (string csFileName in SamplesClient.ProjectDict[f1p].ProjectCSFileNames)
+                        {
+                            <tr>
+                                @for (int i = 0; i < Folder.Depth + 5; i++)
+                                {
+                                    <td></td>
+                                }
+                                <td colspan="2"><a href="/sample/@Folder.Id/@csFileName"><font color="brown">@csFileName</font></a></td>
+                                <td></td>
+                            </tr>
+                        }
+                    }
+
                 }
                 @if ((Folder.ReadMes.Count > 0))
                 {
@@ -103,7 +121,7 @@
                                 <td></td>
 
                             }
-                            <td colspan="2"><a href="/readme/@Folder.Id"><font color="crimson">@readme</font></a></td>
+                            <td colspan="2"><a href="/showreadme/@Folder.Id/readme"><font color="crimson">@readme</font></a></td>
 
                             <td></td>
                         </tr>
@@ -119,7 +137,7 @@
                                 <td></td>
 
                             }
-                        <td><a href="/circuit/@Folder.Id/@image"><font color="blue">@image</font></a></td>
+                            <td><a href="/showimage/@Folder.Id/@image"><font color="blue">@image</font></a></td>
 
                             <td></td>
                         </tr>

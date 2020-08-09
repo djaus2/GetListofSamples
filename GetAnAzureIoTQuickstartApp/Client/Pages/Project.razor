@@ -4,7 +4,7 @@
 @using GetAnAzureIoTQuickstartApp.Client.Components
 @inject Services.SamplesClient _SamplesClient
 @inject NavigationManager navigationManager
-<h1>Hello, world!</h1>
+<h2>Project Folder</h2>
 <table border="1">
     <tr>
         <td><b><i>Project/s:</i></b></td>
@@ -58,12 +58,12 @@
 
         }
     }
-    @foreach (var filename in Folder.ReadMes)
+    @foreach (var filename in Folder.SolutionNames)
     {
-        @if (filename == Folder.ReadMes[0])
+        @if (filename == Folder.SolutionNames[0])
         {
             <tr>
-                <td><b><i>ReadMe Files:</i></b></td>
+                <td><b><i>Solution Files:</i></b></td>
                 <td>
                     <button class="btn btn-primary" @onclick="@(e =>  GetFile(@filename))"><b><i>@filename</i></b></button>
                 </td>
@@ -80,6 +80,53 @@
 
         }
     }
+    @foreach (var filename in Folder.ReadMes)
+    {
+        @if (filename == Folder.ReadMes[0])
+        {
+            <tr>
+                <td><b><i>ReadMe Files:</i></b></td>
+                <td>
+                    <button class="btn btn-primary" @onclick="@(e =>  GoToReadMe(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <button class="btn btn-primary" @onclick="@(e =>  GoToReadMe(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+
+        }
+    }
+    @foreach (var filename in Folder.Images)
+    {
+        @if (filename == Folder.Images[0])
+        {
+            <tr>
+                <td><b><i>Image Files:</i></b></td>
+                <td>
+                    <button class="btn btn-primary" @onclick="@(e =>  GoToImage(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td></td>
+                <td colspan="2">
+                    <button class="btn btn-primary" @onclick="@(e =>  GoToImage(@filename))"><b><i>@filename</i></b></button>
+                </td>
+            </tr>
+
+        }
+    }
+
+
+
     <tr><td colspan="2">&nbsp;</td></tr>
     <tr>
         <td><b><i>@ZipFileName:</i></b></td>
@@ -87,6 +134,7 @@
             <ZipComponent FolderId=@Folder.Id />
         </td>
     </tr>
+
 </table>
 
 <ClipBoardComponent Text=@TextToCopy Filename=@ShowFileName />
@@ -141,5 +189,17 @@
         // = "<!-- " + Proj.ProjectFileName_WithoutText + "-->" + "\n" + Filecontents;
         //TextToCopy = "// " + Proj.ProjectFileName_WithoutText + "\n" + Filecontents;
         StateHasChanged();
+    }
+
+    void GoToReadMe(string filename)
+    {
+        string target = $"/showreadme/{Folder.Id}/{filename}";
+        navigationManager.NavigateTo(target);
+    }
+
+    void GoToImage(string filename)
+    {
+        string target = $"/showimage/{Folder.Id}/{filename}";
+        navigationManager.NavigateTo(target);
     }
 }

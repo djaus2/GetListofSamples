@@ -4,7 +4,7 @@
 @using System.IO
 
 @using Services
-<button type="button" class="btn btn-primary" @onclick="DownloadZipFile">Download folder ZIP</button>
+<button type="button" class="btn btn-primary" @onclick="DownloadZipFile">ZIP</button>
 @code {
     [Parameter]
     public int FolderId { get; set; }
@@ -29,7 +29,7 @@
     async Task DownloadZipFile()
     {
         string Text = showFilename;
-        string param = $"{showFilename}~{FolderId}";
+        string param = $"{showFilename}~{FolderId}~Zip";
         string Filecontents = await _SamplesClient.GetFile(param);
         byte[] bytes = Convert.FromBase64String(Filecontents);
         await FileUtil.SaveAs(JSRuntime, showFilename, bytes);
@@ -40,7 +40,7 @@
         public async static Task SaveAs(IJSRuntime js, string filename, byte[] data)
         {
             await js.InvokeAsync<object>(
-                "saveAsFile",
+                "saveFile",
                 filename,
                 Convert.ToBase64String(data));
         }
