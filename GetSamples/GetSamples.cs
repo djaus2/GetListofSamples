@@ -16,6 +16,9 @@ namespace GetSamples
 
         public static FolderTree GetFolders(string path, string generateTextPath)
         {
+            FolderTree.AllFolderTrees = new List<FolderTree>();
+            Project.AllProjects = new List<Project>();
+
             GenerateTextPath = generateTextPath;
             if (path == "")
                 path = DefaultPath;

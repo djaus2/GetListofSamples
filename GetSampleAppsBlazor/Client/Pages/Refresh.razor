@@ -1,0 +1,68 @@
+﻿@page "/refresh"
+@using Services
+@inject HttpClient Http
+@inject SamplesClient _SamplesClient
+<h1>Refresh Sample Apps</h1>
+
+@if (RootFolder == null)
+{
+    <p><em>ReLoading application data from Server to Client</em></p>
+}
+else
+{
+    <p><b><i>Have loaded the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
+    <p>
+        <button class="btn btn-group-lg" @onclick=@Clear><b><font color="purple" size="3">Clear copied project files on Server</font></b></button>&nbsp;
+    </p>
+    <p>
+        <button class="btn btn-group-lg" @onclick=@ReGet><b><font color="purple" size="3">Get folder data from Server</font></b></button>&nbsp;
+    </p>
+    <p>
+        <button class="btn btn-group-lg" @onclick=@Reload><b><font color="purple" size="3">Rescan Folders on Server</font></b></button>&nbsp;
+
+    </p>
+}
+
+@code
+{
+    ProjectClasses.FolderTree RootFolder { get; set; } = null;
+
+    List<ProjectClasses.FolderTree> Folders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Folders = (await _SamplesClient.Get()).ToList();
+        RootFolder = Folders.FirstOrDefault();
+
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+    async Task Clear()
+    {
+        RootFolder = null;
+        string param = $"1~1~Clear";
+        var Filecontents = await _SamplesClient.GetFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+
+    async Task Reload()
+    {
+        RootFolder = null;
+        string param = $"1~1~Reload";
+        var Filecontents = await _SamplesClient.GetFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+
+    async Task ReGet()
+    {
+        RootFolder = null;
+        var Folders = (await _SamplesClient.Get()).ToList();
+        RootFolder = Folders.FirstOrDefault();
+    }
+}

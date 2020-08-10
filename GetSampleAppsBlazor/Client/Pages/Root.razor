@@ -1,5 +1,4 @@
 ﻿@page "/"
-@page "/root"
 @using Services
 @inject HttpClient Http
 @inject SamplesClient _SamplesClient
@@ -12,22 +11,40 @@
 <i><b>Can also note image and ReadMe (.md) fiiles</b></i>
 <br />
 <i><b>See the Index page </b></i>
-<br /><br />
- For example, can use folders from the following GitHub repositories:<br />
+<br />
+<br />
+ For example, can use folders from the following GitHub repositories:
+<br />
 <ul>
-    <li><a href="https://github.com/dotnet/iot">dotnet/iot</a>
-    <ul>
-        <li><a href="https://github.com/djaus2/iot">Alt: djaus2/iot</a></li>
-    </ul>
+    <li>
+        <a href="https://github.com/dotnet/iot">dotnet/iot</a>
+        <ul>
+            <li><a href="https://github.com/djaus2/iot">Alt: djaus2/iot</a></li>
+        </ul>
     </li>
     <li><a href="https://github.com/Azure/azure-iot-sdk-csharp">Azure IoT Hub SDK CSharp</a></li>
 </ul>.
+@if (RootFolder == null)
+{
+    <p><em>Loading application data,</em></p>
+}
+else
+{
+    <p><b><i>Have loaded the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
+}
 
 @code
 {
+    ProjectClasses.FolderTree RootFolder { get; set; } = null;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        if (RootFolder == null)
+        {
+            var Folders = (await _SamplesClient.Get()).ToList();
+            RootFolder = Folders.FirstOrDefault();
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)

@@ -37,12 +37,17 @@ namespace GetSampleApps.Server
 
             string GenerateTextPath = Configuration.GetValue<string>("GenerateTextPath");
 
+            // Used for rescanning folders.
+            Controllers.SamplesController.DefaultPath = DefaultPath;
+            Controllers.SamplesController.GenerateTextPath = GenerateTextPath;
+
             var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
 
             System.Diagnostics.Debug.WriteLine("*********");
             System.Diagnostics.Debug.WriteLine(Project.AllProjects.Count);
             System.Diagnostics.Debug.WriteLine("*********");
             System.Diagnostics.Debug.WriteLine(FolderTree.AllFolderTrees.Count);
+            System.Diagnostics.Debug.WriteLine("*********");
 
             GetSampleApps.Shared.SamplesCollections.Init(
                 rootSample

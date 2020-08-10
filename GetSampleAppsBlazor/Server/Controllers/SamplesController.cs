@@ -21,6 +21,8 @@ namespace GetSampleApps.Server.Controllers
     [ApiController]
     public class SamplesController : ControllerBase
     {
+        public static string DefaultPath { get; set; } = "";
+        public static string GenerateTextPath { get; set; } = "";
         // GET: api/<SamplesController>
         //[HttpGet]
         //public IEnumerable<IGrouping<char, KeyValuePair<string, List<Project>>>> Get()
@@ -72,75 +74,94 @@ namespace GetSampleApps.Server.Controllers
                 FileType = names[2];
             FileType = FileType.ToUpper();
             int foldId;
-            if (int.TryParse(FolderId, out foldId))
+            if (FileType=="CLEAR")
             {
-                FolderTree folder;
-                string path="";
-                string fpath="";
-                if (FileType == "SAMPLEPROJECTFILE")
+                var files = Directory.GetFiles("Downloads");
+                foreach (string f in files)
                 {
-                    path="Pages\\Project.csproj.txt";
+                    System.IO.File.Delete(f);
                 }
-                else
+                text = "OK";
+            }
+            else if (FileType=="RELOAD")
+            {
+                var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
+                GetSampleApps.Shared.SamplesCollections.Init(
+                    rootSample
+                );
+                text = "OK";
+            }
+            else {
+                if (int.TryParse(FolderId, out foldId))
                 {
-                    var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
-                    folder = fld.First();
-                    fpath = folder.FolderPath;
-                    path = Path.Combine(fpath, FileName);
-                    path = path.Replace("\\\\", "\\");
-                }
-                if (FileType == "IMAGE")
-                {
-                    using (MemoryStream ms = new MemoryStream())
+                    FolderTree folder;
+                    string path = "";
+                    string fpath = "";
+                    if (FileType == "SAMPLEPROJECTFILE")
                     {
-                        using (Bitmap qrCodeImage = new Bitmap(path))
-                        {
-                            //string extension = Path.GetExtension(FileName);
-                            var imgInput = System.Drawing.Image.FromFile(path);
-                            var thisFormat = imgInput.RawFormat;
-                            UInt32 width = (UInt32)imgInput.Width;
-                            int height = imgInput.Height;
-                            if (width > 800)
-                                width = 800;
-                            qrCodeImage.Save(ms, thisFormat);// ImageFormat.Png);
-
-                            text = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-                            //text += Convert.ToBase64String(BitConverter.GetBytes(width));
-                        }
-                    }
-                }
-                else if (FileType == "ZIP")
-                {
-                    string zipPath = $".\\Downloads\\{FileName}";
-                    if (!System.IO.File.Exists(zipPath))
-                    {
-                        ZipFile.CreateFromDirectory(fpath, zipPath);
-                        text = "Zipped";
+                        path = "Pages\\Project.csproj.txt";
                     }
                     else
-                        text = "Already zipped";
-                    using (MemoryStream ms = new MemoryStream())
                     {
-                        using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
-                        {
-                            byte[] bytes = new byte[file.Length];
-                            file.Read(bytes, 0, (int)file.Length);
-                            ms.Write(bytes, 0, (int)file.Length);
-                        }
-
-                        // Ref: https://docs.microsoft.com/en-us/dotnet/api/system.convert.tobase64string?view=netcore-3.1
-                        // Look for example under ToBase64(Byte[], Base64FormattingOPetion)
-                        // It does a Convert.ToBase64String followed by Covert.FromBas64String
-                        // Note: No data type strings as used with images
-
-                        text = Convert.ToBase64String(ms.ToArray());
-                        //"application/zip"); ; ; ; // ;// ;
-
+                        var fld = from f in FolderTree.AllFolderTrees where f.Id == foldId select f;
+                        folder = fld.First();
+                        fpath = folder.FolderPath;
+                        path = Path.Combine(fpath, FileName);
+                        path = path.Replace("\\\\", "\\");
                     }
-                }
-                else
-                {
-                    text = System.IO.File.ReadAllText(path);
+                    if (FileType == "IMAGE")
+                    {
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            using (Bitmap qrCodeImage = new Bitmap(path))
+                            {
+                                //string extension = Path.GetExtension(FileName);
+                                var imgInput = System.Drawing.Image.FromFile(path);
+                                var thisFormat = imgInput.RawFormat;
+                                UInt32 width = (UInt32)imgInput.Width;
+                                int height = imgInput.Height;
+                                if (width > 800)
+                                    width = 800;
+                                qrCodeImage.Save(ms, thisFormat);// ImageFormat.Png);
+
+                                text = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                                //text += Convert.ToBase64String(BitConverter.GetBytes(width));
+                            }
+                        }
+                    }
+                    else if (FileType == "ZIP")
+                    {
+                        string zipPath = $".\\Downloads\\{FileName}";
+                        if (!System.IO.File.Exists(zipPath))
+                        {
+                            ZipFile.CreateFromDirectory(fpath, zipPath);
+                            text = "Zipped";
+                        }
+                        else
+                            text = "Already zipped";
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            using (FileStream file = new FileStream(zipPath, FileMode.Open, FileAccess.Read))
+                            {
+                                byte[] bytes = new byte[file.Length];
+                                file.Read(bytes, 0, (int)file.Length);
+                                ms.Write(bytes, 0, (int)file.Length);
+                            }
+
+                            // Ref: https://docs.microsoft.com/en-us/dotnet/api/system.convert.tobase64string?view=netcore-3.1
+                            // Look for example under ToBase64(Byte[], Base64FormattingOPetion)
+                            // It does a Convert.ToBase64String followed by Covert.FromBas64String
+                            // Note: No data type strings as used with images
+
+                            text = Convert.ToBase64String(ms.ToArray());
+                            //"application/zip"); ; ; ; // ;// ;
+
+                        }
+                    }
+                    else
+                    {
+                        text = System.IO.File.ReadAllText(path);
+                    }
                 }
             }
             return text;

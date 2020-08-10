@@ -30,7 +30,7 @@ namespace GetSampleApps.Client.Services
         private readonly HttpClient client;
         private const string ServiceEndpoint = "/api/Samples";
 
-        public Project[] Projects { get; set; }
+        public Project[] Projects { get; set; } = null;
         public FolderTree[] Folders { get; set; }
         public FolderTree RootFolder { get; set; }
         public static Dictionary<int,FolderTree>FolderDict {get; set;}

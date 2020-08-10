@@ -10,63 +10,59 @@
     }
     else
     {
-        <tr>
+<tr>
 
-            <td>@Folder.Children.Count</td>
-            <td>@Folder.Projects.Count</td>
-            <td>@Folder.Solutions.Count</td>
-            <td>@Folder.ReadMes.Count</td>
-            <td>@Folder.Images.Count</td>
-            @for (int i = 0; i < Folder.Depth; i++)
+    <td>@Folder.Children.Count</td>
+    <td>@Folder.Projects.Count</td>
+    <td>@Folder.Solutions.Count</td>
+    <td>@Folder.ReadMes.Count</td>
+    <td>@Folder.Images.Count</td>
+    @for (int i = 0; i < Folder.Depth; i++)
+    {
+        <td></td>
+    }
+    @if (Folder.Depth == 0)
+    {
+        <td colspan="2"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="blue" size="5">@Folder.FolderName</font></b></button></td>
+    }
+    else
+    {
+        @if (@Folder.HasChildren)
+        {
+            @if (Folder.Depth == 1)
             {
-                <td></td>
+                <td colspan="2">
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="darkgreen" size="4"> @Folder.FolderName</font></b></button>&nbsp;
+                    @if (Folder.Solutions.Count != 0)
+                    {
+                        <ZipComponent FolderId=@Folder.Id />
+                    }
+                </td>
             }
-            @if (Folder.Depth == 0)
+            else if (Folder.Depth == 2)
             {
-                <td colspan="2"><button id=@Folder.FolderName class="btn btn-primary" @onclick=@SampleMe><h2>@Folder.FolderName</h2></button></td>
+                <td colspan="2">
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    @if (Folder.Solutions.Count != 0)
+                    {
+                        <ZipComponent FolderId=@Folder.Id />
+                    }
+                </td>
             }
             else
             {
-                @if (@Folder.HasChildren)
-                {
-                    @if (Folder.Depth == 1)
+                <td colspan="2">
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="brown" size="2">@Folder.FolderName</font></b></button>&nbsp;
+                    @if (Folder.Solutions.Count != 0)
                     {
-                        <td colspan="2">
-                            <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><h3>@Folder.FolderName</h3></button>&nbsp;
-                            @if (Folder.Solutions.Count != 0)
-                            {
-                                <ZipComponent FolderId=@Folder.Id />
-                            }
-                        </td>
+                        <ZipComponent FolderId=@Folder.Id />
                     }
-                    else
-                    {
-                        <td colspan="2">
-                            <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple">@Folder.FolderName</font></b></button>&nbsp;
-                            @if (Folder.Solutions.Count != 0)
-                            {
-                                <ZipComponent FolderId=@Folder.Id />
-                            }
-                        </td>
-                    }
-                }
-                else
-                {
-                    <td colspan="2">
-                        <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">
-                            <b>@Folder.FolderName</b>
-                        </button>
-                        &nbsp;
-                        @if (Folder.Solutions.Count != 0)
-                        {
-                            <ZipComponent FolderId=@Folder.Id />
-                        }
-                    </td>
-
-                }
+                </td>
             }
-            <td></td>
-        </tr>
+        }
+    }
+    <td></td>
+</tr>
         @if (true)
         {
             @if (Folder.Depth > 0)
@@ -149,7 +145,7 @@
 
         @foreach (var f in Folder.Children)
         {
-            <FolderComponent folder=f IsViz=@LowerIsViz />
+            <FolderComponent folder=f IsViz=@IsViz />
         }
     }
 }
@@ -160,14 +156,9 @@
     public int folder { get; set; }
 
     [Parameter]
-    public bool IsViz { get { return Visibility; } set { Visibility = value; } }
+    public bool IsViz { get { return Visibility; } set { Visibility = value; StateHasChanged(); } }
+    bool Visibility = false;
 
-    public bool DetailIsViz { get; set; } = false;
-
-    bool _Visibility = false;
-    public bool Visibility { get { return _Visibility; } set { _Visibility = value; StateHasChanged(); } }
-
-    public bool LowerIsViz { get; set; } = false;
 
     public ProjectClasses.FolderTree Folder { get; set; }
     public ProjectClasses.Project[] Projects { get; set; }
@@ -178,14 +169,9 @@
 
         await base.OnInitializedAsync();
         Folder = SamplesClient.FolderDict[folder];
-        if (Folder.Depth < 2)
+        if (Folder.Depth < 1)
         {
-            Visibility = true;
-            StateHasChanged();
-        }
-        else
-        {
-            Visibility = IsViz;
+            IsViz = true;
             StateHasChanged();
         }
     }
@@ -198,9 +184,22 @@
 
     protected void SampleMe(MouseEventArgs e)
     {
-        LowerIsViz = !LowerIsViz;
-        DetailIsViz = LowerIsViz;
-        StateHasChanged();
+        IsViz = !IsViz;
+        if (!IsViz)
+            //{
+            // This needs futher work!
+            //foreach (var fUpper in Folder.Parent.Children)
+            //{
+            //    var flrUpper = SamplesClient.FolderDict[fUpper];
+            //    flrUpper.IsViz = false;
+            //}
+            //foreach (var fLower in Folder.Children)
+            //{
+            //    var flrLower = SamplesClient.FolderDict[fLower];
+            //    flrLower.IsViz = false;
+            //}
+            //}
+            StateHasChanged();
     }
 
     protected void GoToProject(int id)
