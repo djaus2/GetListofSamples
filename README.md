@@ -41,6 +41,7 @@ Set for .NET IoT SDK repository
 - Download text (.cs or .csproj) on server and display
   - Can then copy or download it
 - Display an image listed in folder
+- Might add a file (zip) upload so can remotely update the folders.
 
 
 
