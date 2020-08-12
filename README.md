@@ -1,13 +1,16 @@
 # .NET IoT SDK Samples
 
-Working on project to generically recurse a folder for sample C# apps  
-Displays in folding layout.  
+A Project to generically recurse a folder for sample C# apps information. 
+Displays the information in folding tree layout.  
 Tags Solutions and Projects.
 
 ## Implementation
 
 Uses a recursive Component that calls itself. 
 That way the app can recursively drill into folder information.
+  
+Folders now expand and contract when clicked.  
+When a folder is expanded all of its siblings close.
   
 Server at startup recurses specified folder collecting data 
 about folders and project/solutions contained therein.
@@ -32,19 +35,12 @@ Set for .NET IoT SDK repository
 ## Custom Razor Components
 - FolderTree that recurses specified folder on server for files in folders
   - Is recursive in that it calls itself.
-- Display Markdown text
+  - Is a Folding UI component.
+- Display Markdown text listed in folder.
 - Zip folder on server and download
 - Download text (.cs or .csproj) on server and display
   - Can then copy or download it
-- Display an image in folder
+- Display an image listed in folder
 
-## Non Breaking Assumptions:
-- Only one or less image files in folder. Ignores all bar first
-- Only one .md or less in folder. Ignores all bar first
-
-## What If
-- More than one solution file in a folder: Lists all
-- More than one project file in a folder: Lists all
-  - Nb: Download of zip downloads all files in a folder (and folders below)
 
 

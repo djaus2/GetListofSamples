@@ -19,6 +19,7 @@ namespace ProjectClasses
 
         public bool IsVisible { get; set; } = false;
 
+        public object Component { get; set; } = null;
 
         public FolderTree( FolderTree parent)
         {

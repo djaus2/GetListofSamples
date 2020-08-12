@@ -23,7 +23,7 @@ else
         }
         @if (Folder.Depth == 0)
         {
-            <td colspan="8"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="blue" size="5">@Folder.FolderName</font></b></button></td>
+            <td colspan="8"><button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="blue" size="5">@Folder.FolderName</font></b></button></td>
             <td></td>
             <td></td>
             <td></td>
@@ -42,7 +42,7 @@ else
             @if (Folder.Depth == 1)
             {
                 <td colspan="6">
-                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="darkgreen" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="darkgreen" size="3">@Folder.FolderName</font></b></button>&nbsp;
                     @if (Folder.IsVisible)
                     {
                         @if (Folder.Solutions.Count != 0)
@@ -59,7 +59,7 @@ else
             else if (Folder.Depth == 2)
             {
                 <td colspan="6">
-                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
                     @if (Folder.IsVisible)
                     {
                         @if (Folder.Solutions.Count != 0)
@@ -76,7 +76,7 @@ else
             else if (Folder.Depth == 3)
             {
                 <td colspan="6">
-                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
                     @if (Folder.IsVisible)
                     {
                         @if (Folder.Solutions.Count != 0)
@@ -93,7 +93,7 @@ else
             else if (Folder.Depth == 4)
             {
                 <td colspan="6">
-                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
                     @if (Folder.IsVisible)
                     {
                         @if (Folder.Solutions.Count != 0)
@@ -110,7 +110,7 @@ else
             else if (Folder.Depth == 5)
             {
                 <td colspan="6">
-                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
                     @if (Folder.IsVisible)
                     {
                         @if (Folder.Solutions.Count != 0)
@@ -127,7 +127,7 @@ else
             else
             {
     <td colspan="6">
-        <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@SampleMe><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+        <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
         @if (Folder.IsVisible)
         {
             @if (Folder.Solutions.Count != 0)
@@ -314,6 +314,8 @@ else
             IsViz = true;
         Folder.IsVisible = IsViz;
 
+        Folder.Component = (object)this;
+
         StateHasChanged();
     }
 
@@ -323,7 +325,7 @@ else
 
     }
 
-    protected void SampleMe(MouseEventArgs e)
+    protected void OpenCloseFolder(MouseEventArgs e)
     {
         IsViz = !IsViz;
         System.Diagnostics.Debug.WriteLine("{0} {1}", Folder.Depth, IsViz);
@@ -344,6 +346,10 @@ else
         }
         else
         {
+            // This is a real "Work of art" .. A kludge iof you like.
+            // If a folder is openned then all sibling folders are closed.
+            // Have to assert that on the component rather than the FolderTree
+            // So the component is stored in the folder as an object when the componet instance is created.
             if ((SamplesClient.FolderDict.Keys.Contains(Folder.Parent)))
             {
                 if (SamplesClient.FolderDict[Folder.Parent].Children != null)
@@ -353,6 +359,15 @@ else
                         if ((fUpper != Folder.Id) && (SamplesClient.FolderDict.Keys.Contains(fUpper)))
                         {
                             var flrUpper = SamplesClient.FolderDict[fUpper];
+                            if (flrUpper.Component != null)
+                            {
+                                FolderComponent fc = (FolderComponent)flrUpper.Component;
+                                if (fc != null)
+                                {
+                                    fc.IsViz = false;
+                                }
+                            }
+
                             flrUpper.IsVisible = false;
                         }
                     }
@@ -377,4 +392,4 @@ else
     }
 
 
-    }
+}
