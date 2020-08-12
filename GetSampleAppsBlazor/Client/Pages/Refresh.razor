@@ -11,16 +11,31 @@
 else
 {
     <p><b><i>Have loaded the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
-    <p>
-        <button class="btn btn-group-lg" @onclick=@Clear><b><font color="purple" size="3">Clear copied project files on Server</font></b></button>&nbsp;
-    </p>
-    <p>
-        <button class="btn btn-group-lg" @onclick=@ReGet><b><font color="purple" size="3">Get folder data from Server</font></b></button>&nbsp;
-    </p>
-    <p>
-        <button class="btn btn-group-lg" @onclick=@Reload><b><font color="purple" size="3">Rescan Folders on Server</font></b></button>&nbsp;
+    <ul>
+    <li>
+        <button class="btn btn-group-lg" @onclick=@Clear><b><font color="purple" size="3">Clear Zip Filess on Server</font></b></button>&nbsp;
+        <ul>
+            <li>Zip files are created and saved on Server before Download.</li>
+            <li><b><i>Nb:</i></b> ZipFolder is specified in <b>appsettings.json on server</b>.</li>
+        </ul>
 
-    </p>
+    </li>
+    <li>
+        <button class="btn btn-group-lg" @onclick=@ReGet><b><font color="purple" size="3">Get folder data from Server</font></b></button>&nbsp;
+        <ul>
+            <li>Get folder and project data from server to client again.</li>
+            <li><b><i>Nb:</i></b> A return to Home (Root) tab will also do this</li>
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;Going to Index tab does not load/relaod the data.</li>
+        </ul>
+    </li>
+    <li>
+        <button class="btn btn-group-lg" @onclick=@Reload><b><font color="purple" size="3">Rescan Folders on Server</font></b></button>&nbsp;
+        <ul>
+            <li>Can rescan if the target folder is changed, without restartinbg server.</li>
+            <li>Need to follow with <i>Get folder data from Server</i> command.</li>
+        </ul>
+    </li>
+    </ul>
 }
 
 @code
