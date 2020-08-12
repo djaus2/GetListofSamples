@@ -48,6 +48,10 @@ namespace GetSampleApps.Server
             System.Diagnostics.Debug.WriteLine("*********");
             System.Diagnostics.Debug.WriteLine(FolderTree.AllFolderTrees.Count);
             System.Diagnostics.Debug.WriteLine("*********");
+            //foreach (var t in FolderTree.AllFolderTrees)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("{0} \tId:{1} \tDepth:{2} \tParent:{3} \tNumChildren:{4} \tNumProjects:{5}", t.FolderName, t.Id, t.Depth, t.Parent, t.NumChildren, t.NumProjects);
+            //}
 
             GetSampleApps.Shared.SamplesCollections.Init(
                 rootSample

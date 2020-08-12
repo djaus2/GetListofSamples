@@ -16,6 +16,10 @@ namespace ProjectClasses
 
         public int Id { get; set; }
 
+
+        public bool IsVisible { get; set; } = false;
+
+
         public FolderTree( FolderTree parent)
         {
             if (parent == null)

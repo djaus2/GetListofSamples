@@ -98,6 +98,8 @@ namespace GetSamples
             }
             if ((Folder.Children.Count==0)&& (Folder.Projects.Count==0) && (Folder.Solutions.Count == 0))
             {
+                if (Folder.Parent <0)
+                    FolderTree.AllFolderTrees[Folder.Parent].Children.Remove(Folder.Id);
                 FolderTree.AllFolderTrees.Remove(Folder);
                 Folder = null;
             }

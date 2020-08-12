@@ -30,7 +30,30 @@
 }
 else
 {
-    <p><b><i>Have loaded the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
+    <h2>About</h2>
+    <p><b><i>Have searched the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
+    <ul>
+        <li><b>Root Tab:</b> This page.</li>
+        <li><b>Index Tab: </b>Explore the folders and files in a tree view.</li>
+        <li><b>.NET Core proj file Tab:</b> A simple project file for use.</li>
+        <li><b>Refresh Tab: </b>Rescan folders-Reload folders from server to client.</li>
+        <li><i>In folders can:</i>
+            <ul>
+            <li>View solution, project, C# from which can copy or download file.</li>
+            <li>View Image and ReadMe( .md format) files</li>
+            <li>If folder has a solution file can get zip of folder (and sub folders)</li>
+            </ul>
+        </li>
+        <li><i>Also:</i>
+        <ul>
+            <li><b>Project Tab:</b> Acess from folders that have a .csproj file</li>
+            <li>Can view, copy and download individual files from there. Can Zip that folder from there as well.</li>
+            <li>Set folder to start scan at in Server appsettings.json</li>
+        </ul>
+        </li>
+
+    </ul>
+
 }
 
 @code

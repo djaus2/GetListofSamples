@@ -51,11 +51,22 @@ namespace TestGetProjects
                 Console.WriteLine("{0}  {2}  {4}  {6}  {8}  {10}",p.Root, " - ", p.Sub, " - ", p.Sub1, " - ", p.Sub2, " - ", p.ProjectName, " - ", p.ProjectFileName);
             }
 
+            Console.WriteLine("==================");
+
+            foreach (var t in FolderTree.AllFolderTrees)
+            {
+                Console.WriteLine("{0} \tId:{1} \tParent:{2} \tNumChildren:{3} \tNumProjects:{4}", t.FolderName, t.Id, t.Parent, t.NumChildren, t.NumProjects);
+            }
+
+            Console.WriteLine("==================");
+
             foreach (var t in FolderTree.AllFolderTrees)
             {
                 if (t.HasProjects)
                     Console.WriteLine("{0} \tId:{1} \tParent:{2} \tNumChildren:{3} \tNumProjects:{4}", t.FolderName, t.Id, t.Parent, t.NumChildren, t.NumProjects);
             }
+
+            Console.WriteLine("==================");
 
             foreach (var t in FolderTree.AllFolderTrees)
             {

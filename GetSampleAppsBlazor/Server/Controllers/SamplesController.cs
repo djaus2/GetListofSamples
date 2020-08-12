@@ -45,18 +45,12 @@ namespace GetSampleApps.Server.Controllers
             var sdf2 = projIds.Except(ll).ToList();
 
             string json = "";
-            if (count == 0)
-            {
-                var projects = SamplesCollections.Projects;//.AlphaSort;
-                json = JsonConvert.SerializeObject(projects);
-                count = 1;
-            }
-            else
-            {
-                var folders = SamplesCollections.Folders;
-                json = JsonConvert.SerializeObject(folders);
-                count = 0;
-            }
+            var projects = SamplesCollections.Projects;
+            string json1 = JsonConvert.SerializeObject(projects);
+
+            var folders = SamplesCollections.Folders;
+            string json2 =  JsonConvert.SerializeObject(folders);
+            json = json2 + "~" + json1;
             return json;
         }
 
@@ -107,7 +101,7 @@ namespace GetSampleApps.Server.Controllers
                         folder = fld.First();
                         fpath = folder.FolderPath;
                         path = Path.Combine(fpath, FileName);
-                        path = path.Replace("\\\\", "\\");
+                        //path = path.Replace("\\\\", "\\");
                     }
                     if (FileType == "IMAGE")
                     {

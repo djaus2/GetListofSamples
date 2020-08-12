@@ -57,8 +57,9 @@ namespace GetSampleApps.Client.Services
         public async Task< FolderTree[]> Get()
         {
             var strn = await client.GetAsync(ServiceEndpoint);
-            string content = await strn.Content.ReadAsStringAsync();
-            Folders =  JsonConvert.DeserializeObject<FolderTree[]>(content);
+            string contents = await strn.Content.ReadAsStringAsync();
+            string[] jsons = contents.Split(new char[] { '~' });
+            Folders =  JsonConvert.DeserializeObject<FolderTree[]>(jsons[0]);
             RootFolder = Folders[0];
             FolderDict = new Dictionary<int, FolderTree>();
             foreach (var folder in Folders)
@@ -67,9 +68,9 @@ namespace GetSampleApps.Client.Services
                 var asd = FolderDict[folder.Id];
             }
 
-            var strn1 = await client.GetAsync(ServiceEndpoint);
-            string content1 = await strn1.Content.ReadAsStringAsync();
-            Projects = JsonConvert.DeserializeObject<Project[]>(content1);
+            //var strn1 = await client.GetAsync(ServiceEndpoint);
+            //string content1 = await strn1.Content.ReadAsStringAsync();
+            Projects = JsonConvert.DeserializeObject<Project[]>(jsons[1]);
 
             ProjectDict = new Dictionary<int, Project>();
             foreach (Project project in Projects)
