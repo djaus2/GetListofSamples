@@ -35,9 +35,12 @@ namespace GetSampleApps.Server
                     break;
             }
 
+            string ZipFolder = Configuration.GetValue<string>("ZipFolder");
+
             string GenerateTextPath = Configuration.GetValue<string>("GenerateTextPath");
 
             // Used for rescanning folders.
+            Controllers.SamplesController.ZipFolder = ZipFolder;
             Controllers.SamplesController.DefaultPath = DefaultPath;
             Controllers.SamplesController.GenerateTextPath = GenerateTextPath;
 

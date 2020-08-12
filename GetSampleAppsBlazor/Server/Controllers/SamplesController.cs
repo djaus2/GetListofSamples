@@ -22,6 +22,7 @@ namespace GetSampleApps.Server.Controllers
     public class SamplesController : ControllerBase
     {
         public static string DefaultPath { get; set; } = "";
+        public static string ZipFolder { get; set; } = "";
         public static string GenerateTextPath { get; set; } = "";
         // GET: api/<SamplesController>
         //[HttpGet]
@@ -125,7 +126,11 @@ namespace GetSampleApps.Server.Controllers
                     }
                     else if (FileType == "ZIP")
                     {
-                        string zipPath = $".\\Downloads\\{FileName}";
+                        if (!Directory.Exists(ZipFolder))
+                        {
+                            Directory.CreateDirectory(ZipFolder);
+                        }
+                        string zipPath = Path.Combine(ZipFolder,FileName);
                         if (!System.IO.File.Exists(zipPath))
                         {
                             ZipFile.CreateFromDirectory(fpath, zipPath);

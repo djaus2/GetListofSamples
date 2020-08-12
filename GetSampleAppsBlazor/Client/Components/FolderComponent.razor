@@ -12,11 +12,11 @@ else
     <tr>
 
         @*<td>@Folder.Children.Count</td>
-        <td>@Folder.Projects.Count</td>
-        <td>@Folder.Solutions.Count</td>
-        <td>@Folder.ReadMes.Count</td>
-        <td>@Folder.Images.Count</td>
-        <td>@Folder.Depth</td>*@
+            <td>@Folder.Projects.Count</td>
+            <td>@Folder.Solutions.Count</td>
+            <td>@Folder.ReadMes.Count</td>
+            <td>@Folder.Images.Count</td>
+            <td>@Folder.Depth</td>*@
         @for (int i = 0; i <= Folder.Depth; i++)
         {
             <td></td>
@@ -126,20 +126,20 @@ else
             }
             else
             {
-    <td colspan="6">
-        <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
-        @if (Folder.IsVisible)
-        {
-            @if (Folder.Solutions.Count != 0)
-            {
-                <ZipComponent FolderId=@Folder.Id />
-            }
-            @if (Folder.Projects.Count != 0)
-            {
-                <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">View</button>
-            }
-        }
-</td>
+                <td colspan="6">
+                    <button id=@Folder.FolderName class="btn btn-group-lg" @onclick=@OpenCloseFolder><b><font color="purple" size="3">@Folder.FolderName</font></b></button>&nbsp;
+                    @if (Folder.IsVisible)
+                    {
+                        @if (Folder.Solutions.Count != 0)
+                        {
+                            <ZipComponent FolderId=@Folder.Id />
+                        }
+                        @if (Folder.Projects.Count != 0)
+                        {
+                            <button class="btn btn-primary" @onclick="@(e => GoToProject(Folder.Id))">View</button>
+                        }
+                    }
+                </td>
             }
 
             <td></td>
@@ -155,7 +155,7 @@ else
             <td></td>
             <td></td>
         }
-        
+
     </tr>
     @if (Folder.IsVisible)
     {
@@ -205,29 +205,34 @@ else
                         <td></td>
                         <td></td>
                     </tr>
-                    @foreach (string csFileName in SamplesClient.ProjectDict[projectID].ProjectCSFileNames)
-                    {
-                        <tr>
-                            @for (int i = 0; i < Folder.Depth + 1; i++)
-                            {
-                                <td></td>
-                            }
-                            <td colspan="6"><a href="/sample/@Folder.Id/@csFileName"><font color="brown">&nbsp;&nbsp;@csFileName</font></a></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    }
                 }
-
             }
+            @if (Folder.Projects.Count > 0)
+            {
+                var Project = SamplesClient.ProjectDict[Folder.Projects.First()];
+                @foreach (string csFileName in Project.ProjectCSFileNames)
+                {
+                    <tr>
+                        @for (int i = 0; i < Folder.Depth + 1; i++)
+                        {
+                            <td></td>
+                        }
+                        <td colspan="6"><a href="/sample/@Folder.Id/@csFileName"><font color="brown">&nbsp;&nbsp;@csFileName</font></a></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            }
+
+
             @if ((Folder.ReadMes.Count > 0))
             {
                 @foreach (string readme in Folder.ReadMes)
@@ -278,14 +283,14 @@ else
                     </tr>
                 }
             }
-        }
 
+        }
         @foreach (var f in Folder.Children)
         {
             <FolderComponent folder=f IsViz=@IsViz />
         }
 
-    }
+    }       
 
 }
 
@@ -295,9 +300,18 @@ else
     public int folder { get; set; }
 
     [Parameter]
-    public bool IsViz { get { return isViz; } set { if (Folder != null) { isViz = value;
-                System.Diagnostics.Debug.WriteLine("Prop {0} {1}", Folder.Depth, IsViz);
-                StateHasChanged(); } } }
+    public bool IsViz
+    {
+        get { return isViz; }
+        set
+        {
+            if (Folder != null)
+            {
+                isViz = value;
+                StateHasChanged();
+            }
+        }
+    }
     public bool isViz = false;
 
 
