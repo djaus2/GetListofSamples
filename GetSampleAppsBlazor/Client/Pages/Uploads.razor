@@ -1,0 +1,43 @@
+﻿@page "/uploads"
+@inject HttpClient client
+@using System.IO
+<h1>Single file</h1>
+@*
+    Refs:
+    https://www.nuget.org/packages/BlazorInputFile
+    http://blog.stevensanderson.com/2019/09/13/blazor-inputfile/
+    https://www.mikesdotnetting.com/article/341/uploading-files-in-blazor
+    https://wellsb.com/csharp/aspnet/drag-drop-file-upload-blazor/
+*@
+
+<p>A single file input that uploads automatically on file selection</p>
+
+<InputFile OnChange="HandleSelection"  />
+
+<p>@status</p>
+
+@code {
+    string status;
+
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        var file = files.FirstOrDefault();
+        if (file != null)
+        {
+            status = $"Started uploading {file.Name}";
+            // Just load into .NET memory to show it can be done
+            // Alternatively it could be saved to disk, or parsed in memory, or similar
+                var ms = new MemoryStream();
+            await file.Data.CopyToAsync(ms);
+
+            status = $"Finished loading {file.Size} bytes from {file.Name}";
+
+            var content = new MultipartFormDataContent {
+                { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
+            };
+            await client.PostAsync("upload", content);
+        }
+    }
+
+
+}

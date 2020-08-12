@@ -515,6 +515,11 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repository\" />
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+
 
 
 

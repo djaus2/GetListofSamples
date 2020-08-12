@@ -76,6 +76,11 @@ namespace GetSampleApps.Server.Controllers
                 {
                     System.IO.File.Delete(f);
                 }
+                var files2 = Directory.GetFiles("Uploads");
+                foreach (string f in files2)
+                {
+                    System.IO.File.Delete(f);
+                }
                 text = "OK";
             }
             else if (FileType=="RELOAD")

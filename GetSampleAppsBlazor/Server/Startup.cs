@@ -36,6 +36,8 @@ namespace GetSampleApps.Server
             }
 
             string ZipFolder = Configuration.GetValue<string>("ZipFolder");
+            string UploadFolder = Configuration.GetValue<string>("UploadFolder");
+            string RepositoryFolder = Configuration.GetValue<string>("RepositoryFolder");
 
             string GenerateTextPath = Configuration.GetValue<string>("GenerateTextPath");
 
@@ -43,6 +45,8 @@ namespace GetSampleApps.Server
             Controllers.SamplesController.ZipFolder = ZipFolder;
             Controllers.SamplesController.DefaultPath = DefaultPath;
             Controllers.SamplesController.GenerateTextPath = GenerateTextPath;
+            Controllers.UploadController.UploadFolder = UploadFolder;
+            Controllers.UploadController.RepositoryFolder = RepositoryFolder;
 
             var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
 
