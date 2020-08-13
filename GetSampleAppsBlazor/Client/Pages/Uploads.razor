@@ -1,7 +1,13 @@
 ﻿@page "/uploads"
 @inject HttpClient client
 @using System.IO
-<h1>Single file</h1>
+@using System.Threading
+<h1>Single File Upload</h1>
+<ul>
+    <li>Placed under Uploads folder on Server</li>
+    <li>If a Zip file is then upzipped to Repository folder</li>
+    <li><b>Nb:</b> Cancel only works <i>after</i> file is loaded into memory, at the moment</li>
+</ul>
 @*
     Refs:
     https://www.nuget.org/packages/BlazorInputFile
@@ -13,31 +19,81 @@
 <p>A single file input that uploads automatically on file selection</p>
 
 <InputFile OnChange="HandleSelection"  />
+<button class="btn btn-primary" @onclick="@Cancel">Cancel</button>
+@if (State == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p><em>@State</em></p>
+}
+    <p>@status1</p>
+    <p>@status2</p>
+    <p>@status3</p>
 
-<p>@status</p>
+    @code {
 
-@code {
-    string status;
+        string? State = "Ready";
+        string status1;
+        string status2;
+        string status3;
 
-    async Task HandleSelection(IFileListEntry[] files)
-    {
-        var file = files.FirstOrDefault();
-        if (file != null)
+        CancellationTokenSource source = null;
+        CancellationToken token;
+
+        async Task HandleSelection(IFileListEntry[] files)
         {
-            status = $"Started uploading {file.Name}";
-            // Just load into .NET memory to show it can be done
-            // Alternatively it could be saved to disk, or parsed in memory, or similar
-                var ms = new MemoryStream();
-            await file.Data.CopyToAsync(ms);
+            State = null;
+            StateHasChanged();
+            source = new CancellationTokenSource();
+            token = source.Token;
+            status1 = "";
+            status2 = "";
+            status3 = "";
+            int step = 0;
+            var file = files.FirstOrDefault();
+            if (file != null)
+            {
+                try
+                {
+                    status1 = $"1/1 Started Loading {file.Name}";
+                    // Just load into .NET memory to show it can be done
+                    // Alternatively it could be saved to disk, or parsed in memory, or similar
+                    var ms = new MemoryStream();
+                    await file.Data.CopyToAsync(ms, token);
+                    step = 1;
+                    status2 = $"2/3 Finished Loading {file.Size} bytes from {file.Name}";
 
-            status = $"Finished loading {file.Size} bytes from {file.Name}";
+                    var content = new MultipartFormDataContent {
+                    { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
+                };
+                    await client.PostAsync("upload", content, token);
+                    status3 = $"3/3 Finished Uploading {file.Name} to Server";
+                }
+                catch (TaskCanceledException e)
+                {
+                    if (step == 0)
+                        status2 = "File Loading was Cancelled!";
+                    else
+                        status3 = "File Upload was Cancelled!";
+                }
+                finally
+                {
+                    source.Dispose();
+                }
+                State = "Done";
+            }
+        }
 
-            var content = new MultipartFormDataContent {
-                { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
-            };
-            await client.PostAsync("upload", content);
+        protected void Cancel(MouseEventArgs e)
+        {
+            if (source != null)
+            {
+                if (token.CanBeCanceled)
+                {
+                    source.Cancel();
+                }
+            }
         }
     }
-
-
-}
