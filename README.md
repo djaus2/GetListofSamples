@@ -4,6 +4,8 @@ A Project to generically recurse a folder for sample C# apps information.
 Displays the information in folding tree layout.  
 Tags Solutions and Projects.
 
+** See Finale below. **
+
 ## Implementation
 
 Uses a recursive Component that calls itself. 
@@ -45,6 +47,7 @@ Set for .NET IoT SDK repository
   - Can now do that (File upload). If zip file then gets unzipped (Needs testing)
 
 ## Finale!
+
 ** Can now upload a zipped folder of samples, which get extracted to the server's repository folder,  
  then scan it, upload the new data to the client and then use those samples.**
 
