@@ -1,10 +1,10 @@
-# .NET IoT SDK Samples
+# .NET C# Sample Projects Indexor
 
 A Project to generically recurse a folder for sample C# apps information. 
 Displays the information in folding tree layout.  
 Tags Solutions and Projects.
 
-** See Finale below. **
+<b><i> See Finale below. </i><b>
 
 ## Implementation
 
@@ -48,8 +48,8 @@ Set for .NET IoT SDK repository
 
 ## Finale!
 
-** Can now upload a zipped folder of samples, which get extracted to the server's repository folder,  
- then scan it, upload the new data to the client and then use those samples.**
+<b><i> Can now upload a zipped folder of samples, which get extracted to the server's repository folder,  
+  then scan it, upload the new data to the client and then use those samples.</i><b>
 
 
 
