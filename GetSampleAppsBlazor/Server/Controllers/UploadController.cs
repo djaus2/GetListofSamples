@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using System;
 
 namespace GetSampleApps.Server.Controllers
 {
@@ -14,6 +15,7 @@ namespace GetSampleApps.Server.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
+        public static string ZipFolder { get; set; } = "";
         public static string UploadFolder { get; set; } = "";
         public static string RepositoryFolder { get; set; } = "";
         private readonly IWebHostEnvironment environment;
@@ -28,6 +30,10 @@ namespace GetSampleApps.Server.Controllers
         //[HttpPost]
         //public async Task<IActionResult> Post(IEnumerable<IFormFile> files) // the default field name. See SaveField
         {
+            if (!Directory.Exists(UploadFolder))
+            {
+                Directory.CreateDirectory(UploadFolder);
+            }
             if (files == null)
             { 
                  files = HttpContext.Request.Form.Files;
@@ -36,39 +42,53 @@ namespace GetSampleApps.Server.Controllers
             {
                 files = HttpContext.Request.Form.Files;
             }
-                try
+            try
+            {
+                foreach (var file in files)
                 {
-                    foreach (var file in files)
+                    var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+                    System.Diagnostics.Debug.WriteLine("=== SVR Content {0}", fileContent.Size);
+                    // Some browsers send file names with full path.
+                    // We are only interested in the file name.
+                    var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
+                    var physicalPath = Path.Combine(UploadFolder, fileName);
+
+                    // Implement security mechanisms here - prevent path traversals,
+                    // check for allowed extensions, types, size, content, viruses, etc.
+                    // this sample always saves the file to the root and is not sufficient for a real application
+
+                    using (var fileStream = new FileStream(physicalPath, FileMode.Create))
                     {
-                        var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-                        System.Diagnostics.Debug.WriteLine("=== SVR Content {0}", fileContent.Size);
-                        // Some browsers send file names with full path.
-                        // We are only interested in the file name.
-                        var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                        var physicalPath = Path.Combine(".\\Uploads", fileName);
-
-                        // Implement security mechanisms here - prevent path traversals,
-                        // check for allowed extensions, types, size, content, viruses, etc.
-                        // this sample always saves the file to the root and is not sufficient for a real application
-
-                        using (var fileStream = new FileStream(physicalPath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-                        FileInfo fi = new FileInfo(physicalPath);
-                        System.Diagnostics.Debug.WriteLine(" === SVR FileSize {0}", fi.Length);
+                        await file.CopyToAsync(fileStream);
                     }
+                    if (Path.GetExtension(file.FileName).ToUpper() == ".ZIP")
+                    {
+                        if (Directory.Exists(RepositoryFolder))
+                        {
+                            Directory.Delete(RepositoryFolder, true);
+                        }
+                        Directory.CreateDirectory(RepositoryFolder);
+                        // Extract it to ./Repository
+                        ZipFile.ExtractToDirectory(physicalPath, RepositoryFolder);
+                    }
+                
+                    FileInfo fi = new FileInfo(physicalPath);
+                    System.Diagnostics.Debug.WriteLine(" === SVR FileSize {0}", fi.Length);
+                    Response.StatusCode = 200;
+                    string msg = $"File Uploaded:{fi.Name}     Size:{fi.Length }";
+                    await Response.WriteAsync(msg); // custom error message
                 }
-                catch
-                {
-                    // implement error handling here, this merely indicates a failure to the upload
-                    Response.StatusCode = 500;
-                    await Response.WriteAsync("some error message"); // custom error message
-                }
-            
+            }
+            catch (Exception ex)
+            {
+                // implement error handling here, this merely indicates a failure to the upload
+                Response.StatusCode = 500;
+                await Response.WriteAsync(ex.Message); // custom error message
+            }
+
 
             // Return an empty string message in this case
-            //return new EmptyResult();
+            ;
         }
 
 

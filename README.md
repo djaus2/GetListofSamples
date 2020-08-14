@@ -43,7 +43,10 @@ Set for .NET IoT SDK repository
 - Display an image listed in folder
 - Might add a file (zip) upload so can remotely update the folders.
   - Can now do that (File upload). If zip file then gets unzipped (Needs testing)
-    - Not integrated to folder search yet.
+
+## Finale!
+** Can now upload a zipped folder of samples, which get extracted to the server's repository folder,  
+ then scan it, upload the new data to the client and then use those samples.**
 
 
 

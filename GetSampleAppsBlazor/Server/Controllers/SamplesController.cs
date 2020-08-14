@@ -22,7 +22,9 @@ namespace GetSampleApps.Server.Controllers
     public class SamplesController : ControllerBase
     {
         public static string DefaultPath { get; set; } = "";
+        public static string UploadFolder { get; set; } = "";
         public static string ZipFolder { get; set; } = "";
+        public static string RepositoryFolder { get; set; } = "";
         public static string GenerateTextPath { get; set; } = "";
         // GET: api/<SamplesController>
         //[HttpGet]
@@ -69,18 +71,47 @@ namespace GetSampleApps.Server.Controllers
                 FileType = names[2];
             FileType = FileType.ToUpper();
             int foldId;
-            if (FileType=="CLEAR")
+            if (FileType== "CLEAR")
             {
-                var files = Directory.GetFiles("Downloads");
-                foreach (string f in files)
+                string[] Files=null;
+                string folder = "skip";
+                switch (FolderId)
                 {
-                    System.IO.File.Delete(f);
+                    case "1":
+                        folder = ZipFolder;
+                        break;
+                    case "2":
+                        folder = UploadFolder;
+                        break;
+                    case "3":
+                        folder="skip";
+                        if (Directory.Exists(RepositoryFolder))
+                        {
+                            Directory.Delete(RepositoryFolder, true);
+                        }
+                        Directory.CreateDirectory(RepositoryFolder);
+                        break;
                 }
-                var files2 = Directory.GetFiles("Uploads");
-                foreach (string f in files2)
+                if (folder != "skip")
                 {
-                    System.IO.File.Delete(f);
+                    Files = Directory.GetFiles(folder);
+                    foreach (string file in Files)
+                    {
+                        System.IO.File.Delete(file);
+                    }
                 }
+                text = "OK";
+            }
+            else if (FileType == "CHANGEREPOS")
+            {
+                string DefaultPath = RepositoryFolder;
+                var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
+                GetSampleApps.Shared.SamplesCollections.Init(rootSample);
+                System.Diagnostics.Debug.WriteLine("*********");
+                System.Diagnostics.Debug.WriteLine(Project.AllProjects.Count);
+                System.Diagnostics.Debug.WriteLine("*********");
+                System.Diagnostics.Debug.WriteLine(FolderTree.AllFolderTrees.Count);
+                System.Diagnostics.Debug.WriteLine("*********");
                 text = "OK";
             }
             else if (FileType=="RELOAD")

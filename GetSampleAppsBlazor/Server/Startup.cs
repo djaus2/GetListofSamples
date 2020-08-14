@@ -43,8 +43,11 @@ namespace GetSampleApps.Server
 
             // Used for rescanning folders.
             Controllers.SamplesController.ZipFolder = ZipFolder;
+            Controllers.SamplesController.UploadFolder = UploadFolder; 
+            Controllers.SamplesController.RepositoryFolder = RepositoryFolder; 
             Controllers.SamplesController.DefaultPath = DefaultPath;
             Controllers.SamplesController.GenerateTextPath = GenerateTextPath;
+            Controllers.UploadController.ZipFolder = ZipFolder;
             Controllers.UploadController.UploadFolder = UploadFolder;
             Controllers.UploadController.RepositoryFolder = RepositoryFolder;
 

@@ -7,8 +7,9 @@
 
 
   <ItemGroup>
-    <None Remove="dotnet\getrepositoryhere.txt" />
-    <None Remove="Downloads\TextFile.txt" />
+    <None Remove="Downloads\*.*" />
+    <None Remove="Uploads\*.*" />
+    <None Remove="Repository\*.*" />
   </ItemGroup>
 
   <ItemGroup>
