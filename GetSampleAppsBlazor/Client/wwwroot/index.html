@@ -10,6 +10,8 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <script src="_content/MatBlazor/dist/matBlazor.js"></script>
+    <link href="_content/MatBlazor/dist/matBlazor.css" rel="stylesheet" />
     <script>
         window.clipboardCopy = {
             copyText: function (text) {
@@ -23,15 +25,15 @@
         }
     </script>
     <script>
-    function saveFile(filename, bytesBase64) {
-        var link = document.createElement('a');
-        alert(filename);
-        link.download = filename;
-        link.href = "data:application/octet-stream;base64," + bytesBase64;
-        document.body.appendChild(link); // Needed for Firefox
-        link.click();
-        document.body.removeChild(link);
-    }
+        function saveFile(filename, bytesBase64) {
+            var link = document.createElement('a');
+            alert(filename);
+            link.download = filename;
+            link.href = "data:application/octet-stream;base64," + bytesBase64;
+            document.body.appendChild(link); // Needed for Firefox
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 </head>
 

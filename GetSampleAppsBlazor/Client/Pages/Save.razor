@@ -1,0 +1,118 @@
+﻿@page "/uploads"
+@inject HttpClient client
+@inject IJSRuntime JsInterop
+@using System.IO
+@using System.Threading
+<h1>Single File Upload</h1>
+<ul>
+    <li>Placed under Uploads folder on Server</li>
+    <li>If a Zip file is then upzipped to Repository folder</li>
+    <li><b>Nb:</b> Cancel only works <i>after</i> file is loaded into memory, at the moment</li>
+</ul>
+@*
+    Refs:
+    https://www.nuget.org/packages/BlazorInputFile
+    http://blog.stevensanderson.com/2019/09/13/blazor-inputfile/
+    https://www.mikesdotnetting.com/article/341/uploading-files-in-blazor
+    https://wellsb.com/csharp/aspnet/drag-drop-file-upload-blazor/
+*@
+
+<p>A single file input that uploads automatically on file selection</p>
+
+<input type="file" onchange="@UploadFile" id="fileUpload" />
+
+<button class="btn btn-primary" @onclick="@Cancel">Cancel</button>
+@if (State == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p><em>@State</em></p>
+}
+    <p>@status1</p>
+    <p>@status2</p>
+    <p>@status3</p>
+
+    @code {
+
+        string? State = "Ready";
+        string status1;
+        string status2;
+        string status3;
+
+        CancellationTokenSource source = null;
+        CancellationToken token;
+
+        async Task HandleSelection(IFileListEntry[] files)
+        {
+            State = null;
+            StateHasChanged();
+            source = new CancellationTokenSource();
+            token = source.Token;
+            status1 = "";
+            status2 = "";
+            status3 = "";
+            int step = 0;
+            var file = files.FirstOrDefault();
+            if (file != null)
+            {
+                try
+                {
+                    status1 = $"1/1 Started Loading {file.Name}";
+                    // Just load into .NET memory to show it can be done
+                    // Alternatively it could be saved to disk, or parsed in memory, or similar
+                    var ms = new MemoryStream();
+                    System.Diagnostics.Debug.WriteLine("=== file  {0}", file.Size);
+                    await file.Data.CopyToAsync(ms);
+                    step = 1;
+                    status2 = $"2/3 Finished Loading {file.Size} bytes from {file.Name}";
+                    System.Diagnostics.Debug.WriteLine("=== ms {0}",ms.Length);
+                    var content = new MultipartFormDataContent {
+                    { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
+                };
+                    System.Diagnostics.Debug.WriteLine("=== content {0}",content.Headers.ContentLength);
+                    bool OK = true;
+                    try {
+                        var httpResponseMessage = await client.PostAsync("upload", content);
+                        httpResponseMessage.EnsureSuccessStatusCode();
+                    } catch (Exception ex)
+                    {
+                        status3 = ex.Message;
+                    }
+                    if (OK)
+                        status3 = $"3/3 Finished Uploading {file.Name} to Server";
+                }
+                catch (TaskCanceledException e)
+                {
+                    if (step == 0)
+                        status2 = "File Loading was Cancelled!";
+                    else
+                        status3 = "File Upload was Cancelled!";
+                }
+                finally
+                {
+                    source.Dispose();
+                }
+                State = "Done";
+            }
+        }
+
+        async Task UploadFile()
+        {
+            var data = await JsInterop.GetFileData("fileUpload");
+            var response = await client.PostAsync("/api/upload", new ByteArrayContent(Convert.FromBase64String(data)));
+            var fileTempName = await response.Content.ReadAsStringAsync();
+        }
+
+        protected void Cancel(MouseEventArgs e)
+        {
+            if (source != null)
+            {
+                if (token.CanBeCanceled)
+                {
+                    source.Cancel();
+                }
+            }
+        }
+    }

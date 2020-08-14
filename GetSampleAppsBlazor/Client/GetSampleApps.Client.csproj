@@ -4,6 +4,14 @@
     <RazorLangVersion>3.0</RazorLangVersion>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="Pages\Save.razor" />
+    <Content Remove="Pages\terek.razor" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Pages\Save.razor" />
+    <None Include="Pages\terek.razor" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BlazorInputFile" Version="0.2.0" />

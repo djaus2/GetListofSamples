@@ -18,8 +18,10 @@
 
 <p>A single file input that uploads automatically on file selection</p>
 
-<InputFile OnChange="HandleSelection"  />
+<InputFile OnChange="HandleSelection" />
 <button class="btn btn-primary" @onclick="@Cancel">Cancel</button>
+<br />
+
 @if (State == null)
 {
     <p><em>Loading...</em></p>
@@ -28,72 +30,103 @@ else
 {
     <p><em>@State</em></p>
 }
-    <p>@status1</p>
-    <p>@status2</p>
-    <p>@status3</p>
+<p>@status1</p>
+<p>@status2</p>
+<p>@status3</p>
 
-    @code {
+@code {
 
-        string? State = "Ready";
-        string status1;
-        string status2;
-        string status3;
+    string? State = "Ready";
+    string status1;
+    string status2;
+    string status3;
 
-        CancellationTokenSource source = null;
-        CancellationToken token;
+    CancellationTokenSource source = null;
+    CancellationToken token;
 
-        async Task HandleSelection(IFileListEntry[] files)
+    async Task HandleSelection(IFileListEntry[] files)
+    {
+        State = null;
+        StateHasChanged();
+        source = new CancellationTokenSource();
+        token = source.Token;
+        status1 = "";
+        status2 = "";
+        status3 = "";
+        int step = 0;
+        var file = files.FirstOrDefault();
+        if (file != null)
         {
-            State = null;
-            StateHasChanged();
-            source = new CancellationTokenSource();
-            token = source.Token;
-            status1 = "";
-            status2 = "";
-            status3 = "";
-            int step = 0;
-            var file = files.FirstOrDefault();
-            if (file != null)
+            try
             {
+                status1 = $"1/1 Started Loading {file.Name}";
+                // Just load into .NET memory to show it can be done
+                // Alternatively it could be saved to disk, or parsed in memory, or similar
+                var ms = new MemoryStream();
+                await file.Data.CopyToAsync(ms,token);
+                step = 1;
+                status2 = $"2/3 Finished Loading {file.Size} bytes from {file.Name}";
+
+
+                var buf = ms.GetBuffer(); // Not used as adds nulls on end.
+
+                //Instead:
+                byte[] buff = new byte[ms.Length];
+                ms.Seek(0, SeekOrigin.Begin);
+                int count = await ms.ReadAsync(buff, 0, (int)ms.Length,token);
+
+                var byteContent = new ByteArrayContent(buff);
+
+                System.Diagnostics.Debug.WriteLine("File Size:  {0}", file.Size);
+                System.Diagnostics.Debug.WriteLine("Memory Stream Length {0}", ms.Length);
+                System.Diagnostics.Debug.WriteLine("Original Buffer Size (not used) {0}", buf.Length);
+                System.Diagnostics.Debug.WriteLine("Bytes read into buffer from memory stream:  {0}", count);
+                System.Diagnostics.Debug.WriteLine("Buffer Length  {0}", buff.Length);
+                System.Diagnostics.Debug.WriteLine("ByteContent.Headers.ContentLength {0}", byteContent.Headers.ContentLength);
+
+
+                var content = new MultipartFormDataContent {
+                    { byteContent, "\"upload\"", file.Name }
+                };
+                System.Diagnostics.Debug.WriteLine("MultipartFormDataContent Headers.ContentLength {0}", content.Headers.ContentLength);
+
+
+                bool OK = true;
                 try
                 {
-                    status1 = $"1/1 Started Loading {file.Name}";
-                    // Just load into .NET memory to show it can be done
-                    // Alternatively it could be saved to disk, or parsed in memory, or similar
-                    var ms = new MemoryStream();
-                    await file.Data.CopyToAsync(ms, token);
-                    step = 1;
-                    status2 = $"2/3 Finished Loading {file.Size} bytes from {file.Name}";
-
-                    var content = new MultipartFormDataContent {
-                    { new ByteArrayContent(ms.GetBuffer()), "\"upload\"", file.Name }
-                };
-                    await client.PostAsync("upload", content, token);
+                    var httpResponseMessage = await client.PostAsync("upload", content,token);
+                    httpResponseMessage.EnsureSuccessStatusCode();
+                }
+                catch (Exception ex)
+                {
+                    status3 = ex.Message;
+                }
+                if (OK)
                     status3 = $"3/3 Finished Uploading {file.Name} to Server";
-                }
-                catch (TaskCanceledException e)
-                {
-                    if (step == 0)
-                        status2 = "File Loading was Cancelled!";
-                    else
-                        status3 = "File Upload was Cancelled!";
-                }
-                finally
-                {
-                    source.Dispose();
-                }
-                State = "Done";
             }
-        }
-
-        protected void Cancel(MouseEventArgs e)
-        {
-            if (source != null)
+            catch (TaskCanceledException e)
             {
-                if (token.CanBeCanceled)
-                {
-                    source.Cancel();
-                }
+                if (step == 0)
+                    status2 = "File Loading was Cancelled!";
+                else
+                    status3 = "File Upload was Cancelled!";
+            }
+            finally
+            {
+                source.Dispose();
+            }
+            State = "Done";
+        }
+    }
+
+    protected void Cancel(MouseEventArgs e)
+    {
+        if (source != null)
+        {
+            if (token.CanBeCanceled)
+            {
+                source.Cancel();
             }
         }
     }
+}
