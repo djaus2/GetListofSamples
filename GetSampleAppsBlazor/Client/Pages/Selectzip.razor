@@ -44,7 +44,7 @@ else
     {
         <br />
         <h4>Select a previously uploaded Samples Zip File</h4>
-        <EditForm Model="model">
+        <EditForm Model="zipModel">
             <InputSelect @bind-Value=this.zipFile>
                 <option value="">---Select---</option>
                 @foreach (string zip in Zips)
@@ -71,6 +71,7 @@ else
 @code{
     bool Selected = false;
     string[] Zips = null;
+
     string _zipfile;
     string zipFile
     {
@@ -81,9 +82,7 @@ else
         }
     }
 
-    Model model { get; set; }
-
-    List<Model> models { get; set; }
+    ZipModel zipModel { get; set; }
 
 
     void ZipSelected(string value)
@@ -105,7 +104,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        model = new Model();
+        zipModel = new ZipModel();
         string getZips = $"1~1~GetZips";
         string zips = await _SamplesClient.GetTextorTextFile(getZips);
         if (zips == null)
@@ -137,7 +136,7 @@ else
         navigator.NavigateTo("/repository");
     }
 
-    class Model
+    class ZipModel
     {
         public string Id { get; set; }
         public string Zip { get; set; }
