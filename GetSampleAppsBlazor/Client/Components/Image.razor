@@ -101,7 +101,7 @@ else
         Folder = SamplesClient.FolderDict[folderId];
         string DeviceNameProjectName = $"{ImageFileName}~{FolderId}~Image";
 
-        ImageInfo = await _SamplesClient.GetFile(DeviceNameProjectName);
+        ImageInfo = await _SamplesClient.GetTextorTextFile(DeviceNameProjectName);
         StateHasChanged();
     }
 

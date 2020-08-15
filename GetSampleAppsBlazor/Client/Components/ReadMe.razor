@@ -37,7 +37,7 @@
         int id = int.Parse(FolderId);
 
         string folderReadMe = $"{MarkdownFilename}~{id}~md";
-        TextToCopy = await _SamplesClient.GetFile(folderReadMe);
+        TextToCopy = await _SamplesClient.GetTextorTextFile(folderReadMe);
         StateHasChanged();
     }
 }

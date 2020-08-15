@@ -17,7 +17,7 @@ namespace GetSampleApps.Server.Controllers
     {
         public static string ZipFolder { get; set; } = "";
         public static string UploadFolder { get; set; } = "";
-        public static string RepositoryFolder { get; set; } = "";
+        public static string SamplesFolder { get; set; } = "";
         private readonly IWebHostEnvironment environment;
         public UploadController(IWebHostEnvironment environment)
         {
@@ -63,13 +63,13 @@ namespace GetSampleApps.Server.Controllers
                     }
                     if (Path.GetExtension(file.FileName).ToUpper() == ".ZIP")
                     {
-                        if (Directory.Exists(RepositoryFolder))
+                        if (Directory.Exists(SamplesFolder))
                         {
-                            Directory.Delete(RepositoryFolder, true);
+                            Directory.Delete(SamplesFolder, true);
                         }
-                        Directory.CreateDirectory(RepositoryFolder);
+                        Directory.CreateDirectory(SamplesFolder);
                         // Extract it to ./Repository
-                        ZipFile.ExtractToDirectory(physicalPath, RepositoryFolder);
+                        ZipFile.ExtractToDirectory(physicalPath, SamplesFolder);
                     }
                 
                     FileInfo fi = new FileInfo(physicalPath);

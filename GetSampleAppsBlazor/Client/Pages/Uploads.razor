@@ -2,6 +2,8 @@
 @inject HttpClient client
 @using System.IO
 @using System.Threading
+@inject NavigationManager navigator
+
 <h1>Single File Upload</h1>
 <ul>
     <li>Placed under Uploads folder on Server</li>
@@ -21,7 +23,8 @@
 <p>A single file input that uploads automatically on file selection</p>
 
 <InputFile OnChange="HandleSelection" />
-<button class="btn btn-primary" @onclick="@Cancel">Cancel</button>
+<button class="btn btn-primary" @onclick="@Cancel">Cancel</button>&nbsp;&nbsp;
+<button class="btn btn-primary" @onclick="@GotoRepository">Go Back</button>
 <br />
 
 @if (State == null)
@@ -155,5 +158,10 @@ else
                 source.Cancel();
             }
         }
+    }
+
+    void GotoRepository()
+    {
+        navigator.NavigateTo("/repository");
     }
 }

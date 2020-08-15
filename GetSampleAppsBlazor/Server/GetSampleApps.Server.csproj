@@ -9,7 +9,7 @@
   <ItemGroup>
     <None Remove="Downloads\*.*" />
     <None Remove="Uploads\*.*" />
-    <None Remove="Repository\*.*" />
+    <None Remove="Samples\*.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -517,9 +517,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
+    <Folder Include="Samples\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rmdir $(ProjectDir)Repository /s /q&#xD;&#xA;mkdir $(ProjectDir)Repository" />
+  </Target>
 
 
 

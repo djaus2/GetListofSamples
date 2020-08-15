@@ -24,7 +24,7 @@ namespace GetSampleApps.Server.Controllers
         public static string DefaultPath { get; set; } = "";
         public static string UploadFolder { get; set; } = "";
         public static string ZipFolder { get; set; } = "";
-        public static string RepositoryFolder { get; set; } = "";
+        public static string SamplesFolder { get; set; } = "";
         public static string GenerateTextPath { get; set; } = "";
         // GET: api/<SamplesController>
         //[HttpGet]
@@ -71,7 +71,18 @@ namespace GetSampleApps.Server.Controllers
                 FileType = names[2];
             FileType = FileType.ToUpper();
             int foldId;
-            if (FileType== "CLEAR")
+            if (FileType == "GETZIPS")
+            {
+                string Zips = "None";
+                if (Directory.Exists(UploadFolder))
+                {
+                    var zips = Directory.GetFiles(UploadFolder, "*.zip");
+                    var zipFilenames = from z in zips select Path.GetFileName(z);
+                    Zips = String.Join("~", zipFilenames);
+                }
+                text = Zips;
+            }
+            else   if (FileType== "CLEAR")
             {
                 string[] Files=null;
                 string folder = "skip";
@@ -85,11 +96,11 @@ namespace GetSampleApps.Server.Controllers
                         break;
                     case "3":
                         folder="skip";
-                        if (Directory.Exists(RepositoryFolder))
+                        if (Directory.Exists(SamplesFolder))
                         {
-                            Directory.Delete(RepositoryFolder, true);
+                            Directory.Delete(SamplesFolder, true);
                         }
-                        Directory.CreateDirectory(RepositoryFolder);
+                        Directory.CreateDirectory(SamplesFolder);
                         break;
                 }
                 if (folder != "skip")
@@ -104,7 +115,7 @@ namespace GetSampleApps.Server.Controllers
             }
             else if (FileType == "CHANGEREPOS")
             {
-                string DefaultPath = RepositoryFolder;
+                string DefaultPath = SamplesFolder;
                 var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
                 GetSampleApps.Shared.SamplesCollections.Init(rootSample);
                 System.Diagnostics.Debug.WriteLine("*********");

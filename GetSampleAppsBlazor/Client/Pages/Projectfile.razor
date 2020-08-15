@@ -52,7 +52,7 @@ Will include all C# source files in same folder.
     {
         await base.OnInitializedAsync();
 
-        filecontents = await _SamplesClient.GetFile("1~1~SampleProjectFile");
+        filecontents = await _SamplesClient.GetTextorTextFile("1~1~SampleProjectFile");
         OnClick(null);
     }
 

@@ -1,0 +1,150 @@
+﻿@page "/selectzip"
+@inject HttpClient client
+@using System.IO
+@using System.Threading
+@using Services
+@inject NavigationManager navigator
+@inject SamplesClient _SamplesClient
+<h1>Select Sample Zip</h1>
+<br />
+<button class="btn btn-primary" @onclick="@GotoRepository">Go Back</button>
+<br />
+@if (Zips == null)
+{
+    <p><em>Uploading...</em></p>
+    @*<Chase />
+        <Circle />
+        <CircleFade />
+        <Flow />
+        <Grid />*@
+    <Plane />
+    @*
+        <Pulse />
+        <Swing />
+        <Wander />
+        <Wave />
+        <Bounce />
+        <Fold />*@
+}
+else
+{
+    @if (Zips.Count() == 0)
+    {
+        <br />
+        <h4>No previously uploaded Zips on Server</h4>
+    }
+    else if (Zips.Count() == 1)
+    {
+        <br />
+        <h4>Only one previously uploaded Zip. Use that:</h4>
+        <br />
+        <h4>Selected Zip File: <font color="blue">@zipFile</font></h4>
+    }
+    else
+    {
+        <br />
+        <h4>Select a previously uploaded Samples Zip File</h4>
+        <EditForm Model="model">
+            <InputSelect @bind-Value=this.zipFile>
+                <option value="">---Select---</option>
+                @foreach (string zip in Zips)
+                        {
+                <option  class="oi-transfer" value=@zip>@zip</option>
+                        }
+            </InputSelect>
+        </EditForm>
+        <br />
+        @if (Selected)
+        {
+            <h4>Selected Zip File: <font color="blue">@zipFile</font></h4>
+        }
+    }
+    @if (Selected)
+    {
+        <button class="btn btn-primary" @onclick="@UnzipSamples">Unzip that on Server</button>
+    }
+}
+
+
+
+
+@code{
+    bool Selected = false;
+    string[] Zips = null;
+    string _zipfile;
+    string zipFile
+    {
+        get { return _zipfile; }
+        set
+        {
+            _zipfile = value; ZipSelected(value);
+        }
+    }
+
+    Model model { get; set; }
+
+    List<Model> models { get; set; }
+
+
+    void ZipSelected(string value)
+    {
+        if (value == "")
+        {
+            Selected = false;
+            _zipfile = "";
+            StateHasChanged();
+        }
+        else
+        {
+            Selected = true;
+        }
+    }
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = new Model();
+        string getZips = $"1~1~GetZips";
+        string zips = await _SamplesClient.GetTextorTextFile(getZips);
+        if (zips == null)
+        {
+            Zips = new string[0];
+        }
+        else if (zips == "")
+        {
+            Zips = new string[0];
+        }
+        else if (zips == "None")
+        {
+            Zips = new string[0];
+        }
+        else
+        {
+            Zips = zips.Split(new char[] { '~' });
+            if (Zips.Count() == 1)
+            {
+                zipFile = Zips[0];
+                Selected = true;
+            }
+        }
+        StateHasChanged();
+    }
+
+    void GotoRepository()
+    {
+        navigator.NavigateTo("/repository");
+    }
+
+    class Model
+    {
+        public string Id { get; set; }
+        public string Zip { get; set; }
+    }
+
+    async Task UnzipSamples()
+    {
+
+    }
+}

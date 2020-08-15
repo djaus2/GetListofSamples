@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using ProjectClasses;
+using System.IO;
+using System.IO.Compression;
 
 namespace GetSampleApps.Server
 {
@@ -35,22 +37,79 @@ namespace GetSampleApps.Server
                     break;
             }
 
+
             string ZipFolder = Configuration.GetValue<string>("ZipFolder");
             string UploadFolder = Configuration.GetValue<string>("UploadFolder");
-            string RepositoryFolder = Configuration.GetValue<string>("RepositoryFolder");
-
+            string SamplesFolder = Configuration.GetValue<string>("SamplesFolder");
             string GenerateTextPath = Configuration.GetValue<string>("GenerateTextPath");
+
+            bool done = false;
+            // If there is a zip file in uploads and nothing repository folder
+            // Extract the first zipfile to the repository file
+            if (Directory.Exists(UploadFolder))
+            {
+                if (Directory.Exists(SamplesFolder))
+                {
+                    // A bit apriori but if repository folder ahs subdirectories, 
+                    // assume it is a samples foler.
+                    var dirs = Directory.GetDirectories(SamplesFolder);
+                    if (dirs.Count() > 0)
+                    {
+                        DefaultPath = SamplesFolder;
+                        System.Diagnostics.Debug.WriteLine("Using existing Folder");
+                        done = true;
+                    }
+                }
+                if (!done)
+                {
+                    var zipFiles = Directory.GetFiles(UploadFolder, "*.zip");
+                    if (zipFiles.Count() != 0)
+                    {
+                        var zipfile = zipFiles.First();
+                        if (Directory.Exists(SamplesFolder))
+                        {
+                            Directory.Delete(SamplesFolder, true);
+                        }
+                        Directory.CreateDirectory(SamplesFolder);
+                        // Extract it to ./Samples
+                        ZipFile.ExtractToDirectory(zipfile, SamplesFolder);
+                        DefaultPath = SamplesFolder;
+                        System.Diagnostics.Debug.WriteLine("Generating Samples from zipfile.");
+                        done = true;
+                    }
+                }
+            }
+            else 
+            {
+                if (Directory.Exists(SamplesFolder))
+                {
+                    // A bit apriori but if repository folder ahs subdirectories, 
+                    // assume it is a samples foler.
+                    var dirs = Directory.GetDirectories(SamplesFolder);
+                    if (dirs.Count() > 0)
+                    {
+                        DefaultPath = SamplesFolder;
+                        System.Diagnostics.Debug.WriteLine("Using existing Folder");
+                        done = true;
+                    }
+                }
+            }
+            if (!done)
+            {
+                System.Diagnostics.Debug.WriteLine("Using appdesttings.json \"PathToRepository\" setting for Sanmples: {0}", DefaultPath);
+            }
+        
 
             // Used for rescanning folders.
             Controllers.SamplesController.ZipFolder = ZipFolder;
-            Controllers.SamplesController.UploadFolder = UploadFolder; 
-            Controllers.SamplesController.RepositoryFolder = RepositoryFolder; 
+            Controllers.SamplesController.UploadFolder = UploadFolder;
+            Controllers.SamplesController.SamplesFolder = SamplesFolder;
             Controllers.SamplesController.DefaultPath = DefaultPath;
             Controllers.SamplesController.GenerateTextPath = GenerateTextPath;
             Controllers.UploadController.ZipFolder = ZipFolder;
             Controllers.UploadController.UploadFolder = UploadFolder;
-            Controllers.UploadController.RepositoryFolder = RepositoryFolder;
-
+            Controllers.UploadController.SamplesFolder = SamplesFolder;
+            
             var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
 
             System.Diagnostics.Debug.WriteLine("*********");
@@ -67,6 +126,7 @@ namespace GetSampleApps.Server
                 rootSample
             );
         }
+        
 
         public IConfiguration Configuration { get; }
 

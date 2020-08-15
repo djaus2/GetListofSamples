@@ -183,7 +183,7 @@
     {
         ShowFileName = filename;
         string param = $"{filename}~{Folder.Id}";
-        Filecontents = await _SamplesClient.GetFile(param);
+        Filecontents = await _SamplesClient.GetTextorTextFile(param);
         TextToCopy = Filecontents;
         // = "<!-- " + Proj.ProjectFileName_WithoutText + "-->" + "\n" + Filecontents;
         //TextToCopy = "// " + Proj.ProjectFileName_WithoutText + "\n" + Filecontents;

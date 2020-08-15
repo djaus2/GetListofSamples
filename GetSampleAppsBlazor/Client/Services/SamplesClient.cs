@@ -46,7 +46,7 @@ namespace GetSampleApps.Client.Services
                 this.client = client;
             }
 
-        public async Task<string> GetFile (string path)
+        public async Task<string> GetTextorTextFile (string path)
         {
             string fileContents = "";
             var strn = await client.GetAsync(ServiceEndpoint + $"/{path}");

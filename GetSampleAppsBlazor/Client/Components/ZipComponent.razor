@@ -31,7 +31,7 @@
     {
         string Text = showFilename;
         string param = $"{showFilename}~{FolderId}~Zip";
-        string Filecontents = await _SamplesClient.GetFile(param);
+        string Filecontents = await _SamplesClient.GetTextorTextFile(param);
         byte[] bytes = Convert.FromBase64String(Filecontents);
         await FileUtil.SaveAs(JSRuntime, showFilename, bytes);
     }

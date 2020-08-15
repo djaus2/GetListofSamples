@@ -1,0 +1,122 @@
+﻿@page "/repository"
+@using Services
+@inject HttpClient Http
+@inject SamplesClient _SamplesClient
+@inject NavigationManager navigator
+<h1>Set up Sample folder on Server</h1>
+
+@if (RootFolder == null)
+{
+    <p><em>ReLoading application data from Server to Client</em></p>
+    @*<Chase />
+        <Circle />
+        <CircleFade />
+        <Flow />
+        <Grid />
+        <Plane />
+        <Pulse />*@
+    <Swing />
+    @*<Wander />
+    <Wave />
+    @*<Bounce />
+        <Fold />*@
+}
+else
+{
+    <p><b>Can upload a zipped folder of .NET Core C# Sample app projects and use that.</b></p>
+    <ol>
+        <li>
+            <button class="btn btn-toolbar" @onclick=@GetRepository><b><font color="purple" size="3">Upload Zip folder to server first.</font></b></button>
+            <ul>
+                <li> ...                
+                    <ul>
+                        <li>Or:<br />
+                        <button class="btn btn-toolbar" @onclick=@SelectZip><b><font color="purple" size="3">Select from previously uploaded zip files.</font></b></button></li>
+                    </ul>
+                </li>
+                <li>Then return here.</li>
+            </ul>
+        </li>
+        <li>
+            <button class="btn btn-link" @onclick=@SetRepositoryFolder><b><font color="purple" size="3">Set Server Repository folder as the Samples folder (the repository folder).</font></b></button>&nbsp;
+            <ul>
+                <li>Do this after uploading (or selecting) a Zip file.</li>
+                <li>Need to follow with following command:</li>
+            </ul>
+        </li>
+        <li>
+            <button class="btn btn-group-lg" @onclick=@ReGet><b><font color="purple" size="3">Get folder data from Server</font></b></button>&nbsp;
+            <ul>
+                <li>Get folder and project data from server to client again.</li>
+            </ul>
+        </li>
+    </ol>
+}
+
+@code
+{
+    ProjectClasses.FolderTree RootFolder { get; set; } = null;
+
+    List<ProjectClasses.FolderTree> Folders;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Folders = (await _SamplesClient.Get()).ToList();
+        RootFolder = Folders.FirstOrDefault();
+
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+    async Task ClearZips()
+    {
+        RootFolder = null;
+        string param = $"1~1~Clear";
+        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+    async Task ClearUploads()
+    {
+        RootFolder = null;
+        string param = $"1~2~Clear";
+        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+    void GetRepository()
+    {
+        navigator.NavigateTo("/uploads");
+    }
+
+    async Task Reload()
+    {
+        RootFolder = null;
+        string param = $"1~1~Reload";
+        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+
+    async Task ReGet()
+    {
+        RootFolder = null;
+        var Folders = (await _SamplesClient.Get()).ToList();
+        RootFolder = Folders.FirstOrDefault();
+    }
+
+    async Task SetRepositoryFolder()
+    {
+        RootFolder = null;
+        string param = $"1~1~ChangeRepos";
+        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
+        RootFolder = Folders.FirstOrDefault();
+    }
+
+    async Task SelectZip()
+    {
+        navigator.NavigateTo("/selectzip");
+    }
+}

@@ -36,7 +36,7 @@
 
         ShowFileName = Filename;
         string param = $"{Filename}~{id}";
-        string Filecontents = await _SamplesClient.GetFile(param);
+        string Filecontents = await _SamplesClient.GetTextorTextFile(param);
         TextToCopy = Filecontents;
         StateHasChanged();
     }
