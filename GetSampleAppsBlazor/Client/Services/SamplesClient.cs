@@ -96,7 +96,33 @@ namespace GetSampleApps.Client.Services
             }
             return Folders;    
         }
-            
 
+        public async Task<string> Delete (string folder)
+        {
+            int id=-1;
+            switch (folder)
+            {
+                case "uploads":
+                    id = 1;
+                    break;
+                case "downloads":
+                    id = 2;
+                    break;
+                case "samples":
+                    id = 3;
+                    break;         
+            }
+            if (id != -1)
+            {
+                string fileContents = "";
+                var strn = await client.DeleteAsync(ServiceEndpoint + $"/{id}");
+                fileContents = await strn.Content.ReadAsStringAsync();
+                return fileContents;
+            }
+            else
+            {
+                return "Not a valid folder on server.";
+            }
+        }            
     }
 }

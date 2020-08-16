@@ -182,7 +182,7 @@
     async Task GetFile(string filename)
     {
         ShowFileName = filename;
-        string param = $"{filename}~{Folder.Id}";
+        string param = $"GetFile~{filename}~{Folder.Id}";
         Filecontents = await _SamplesClient.GetTextorTextFile(param);
         TextToCopy = Filecontents;
         // = "<!-- " + Proj.ProjectFileName_WithoutText + "-->" + "\n" + Filecontents;

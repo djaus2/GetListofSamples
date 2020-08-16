@@ -99,7 +99,7 @@ else
 
         int folderId = int.Parse(FolderId);
         Folder = SamplesClient.FolderDict[folderId];
-        string DeviceNameProjectName = $"{ImageFileName}~{FolderId}~Image";
+        string DeviceNameProjectName = $"Image~{ImageFileName}~{FolderId}";
 
         ImageInfo = await _SamplesClient.GetTextorTextFile(DeviceNameProjectName);
         StateHasChanged();

@@ -30,7 +30,7 @@
     async Task DownloadZipFile()
     {
         string Text = showFilename;
-        string param = $"{showFilename}~{FolderId}~Zip";
+        string param = $"Zip~{showFilename}~{FolderId}";
         string Filecontents = await _SamplesClient.GetTextorTextFile(param);
         byte[] bytes = Convert.FromBase64String(Filecontents);
         await FileUtil.SaveAs(JSRuntime, showFilename, bytes);

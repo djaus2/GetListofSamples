@@ -38,13 +38,6 @@ else
             </ul>
         </li>
         <li>
-            <button class="btn btn-link" @onclick=@SetRepositoryFolder><b><font color="purple" size="3">Set Server Repository folder as the Samples folder (the repository folder).</font></b></button>&nbsp;
-            <ul>
-                <li>Do this after uploading (or selecting) a Zip file.</li>
-                <li>Need to follow with following command:</li>
-            </ul>
-        </li>
-        <li>
             <button class="btn btn-group-lg" @onclick=@ReGet><b><font color="purple" size="3">Get folder data from Server</font></b></button>&nbsp;
             <ul>
                 <li>Get folder and project data from server to client again.</li>
@@ -73,20 +66,7 @@ else
         base.OnAfterRender(firstRender);
     }
 
-    async Task ClearZips()
-    {
-        RootFolder = null;
-        string param = $"1~1~Clear";
-        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
-        RootFolder = Folders.FirstOrDefault();
-    }
-    async Task ClearUploads()
-    {
-        RootFolder = null;
-        string param = $"1~2~Clear";
-        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
-        RootFolder = Folders.FirstOrDefault();
-    }
+
     void GetRepository()
     {
         navigator.NavigateTo("/uploads");
@@ -107,15 +87,8 @@ else
         RootFolder = Folders.FirstOrDefault();
     }
 
-    async Task SetRepositoryFolder()
-    {
-        RootFolder = null;
-        string param = $"1~1~ChangeRepos";
-        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
-        RootFolder = Folders.FirstOrDefault();
-    }
 
-    async Task SelectZip()
+    void SelectZip()
     {
         navigator.NavigateTo("/selectzip");
     }

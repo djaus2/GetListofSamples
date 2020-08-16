@@ -35,7 +35,7 @@
         int id = int.Parse(FolderId);
 
         ShowFileName = Filename;
-        string param = $"{Filename}~{id}";
+        string param = $"GetFile~{Filename}~{id}";
         string Filecontents = await _SamplesClient.GetTextorTextFile(param);
         TextToCopy = Filecontents;
         StateHasChanged();
