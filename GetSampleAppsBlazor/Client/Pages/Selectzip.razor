@@ -160,15 +160,18 @@ else
             zx = true;
             if (Result.Length>1)
             {
+                string setSamplesFolder = "RELOAD~2~2";
+                result = await _SamplesClient.GetTextorTextFile(setSamplesFolder);
                 Status = Result[1];
+                zx = null;
+                var Folders = (await _SamplesClient.Get()).ToList();
+                zx = true;
             }
             else if (Result.Length > 0)
             { Status = Result[0]; }
             else
             { Status = "Error unzip samples."; }
-            zx = null;
-            var Folders = (await _SamplesClient.Get()).ToList();
-            zx = true;
+
         }
     }
 }

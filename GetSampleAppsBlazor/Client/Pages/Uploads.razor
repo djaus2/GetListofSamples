@@ -3,6 +3,7 @@
 @using System.IO
 @using System.Threading
 @inject NavigationManager navigator
+@inject GetSampleApps.Client.Services.SamplesClient _SamplesClient 
 
 <h1>Single File Upload</h1>
 <ul>
@@ -27,7 +28,7 @@
 <button class="btn btn-primary" @onclick="@GotoRefresh">Go Back</button>
 <br />
 
-@if (State == null)
+@if (Status == null)
 {
     <p><em>Uploading...</em></p>
     @*<Chase />
@@ -45,7 +46,7 @@
 }
 else
 {
-    <p><em>@State</em></p>
+    <p><em>@Status</em></p>
 }
 <p>@status1</p>
 <p>@status2</p>
@@ -56,7 +57,7 @@ else
 
 @code {
 
-    string State = "Ready";
+    string Status = "Ready";
     string status1;
     string status2;
     string status3;
@@ -69,7 +70,7 @@ else
 
     async Task HandleSelection(IFileListEntry[] files)
     {
-        State = null;
+        Status = null;
         responseCode = "";
         StateHasChanged();
         source = new CancellationTokenSource();
@@ -126,6 +127,15 @@ else
                     response = await httpResponseMessage.Content.ReadAsStringAsync();
                     httpResponseMessage.EnsureSuccessStatusCode();
 
+                    Status = "Unzipped to Samples";
+                    Status = null;
+
+                    string setSamplesFolder = "RELOAD~2~2";
+                    var result = await _SamplesClient.GetTextorTextFile(setSamplesFolder);
+                    Status = "Reloaded";
+                    Status = null;
+                    var Folders = (await _SamplesClient.Get()).ToList();
+
                 }
                 catch (Exception ex)
                 {
@@ -145,7 +155,7 @@ else
             {
                 source.Dispose();
             }
-            State = "Done";
+            Status = "Done";
         }
     }
 

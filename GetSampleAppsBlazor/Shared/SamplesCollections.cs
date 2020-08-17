@@ -27,16 +27,17 @@ namespace GetSampleApps.Shared
             DefaultPath = "";
             switch (PathToUse)
             {
-                case 1:
+                //  For Ids see Server Properties/Resources File
+                case 0:
                     if (Directory.Exists(DevPathToRepository))
                         DefaultPath = DevPathToRepository;
                     break;
-                case 2:
+                case 1:
                     if (Directory.Exists(ServerSamplesFolder))
                         DefaultPath = ServerSamplesFolder;
                     break;
                 default:
-                    // If not 1 or 2 search
+                    // If not 0 or 1 search
                     bool done = false;
                     // If there is a zip file in uploads and nothing repository folder
                     // Extract the first zipfile to the repository file

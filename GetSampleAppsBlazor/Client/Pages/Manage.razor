@@ -30,12 +30,20 @@ else
             <button class="btn btn-group-lg" @onclick=@Upload><b><font color="purple" size="3">Upload</font> a Samples zip file to Server, and extract.</b></button>&nbsp;
         </li>
         <li>
-            <button class="btn btn-toolbar" @onclick=@SelectZip><i>Or ...</i><b><font color="purple" size="3">Select</font> A previously uploaded Samples zip file.</b></button>
+            <button class="btn btn-toolbar" @onclick=@SelectZip><i>Or ...</i><b><font color="purple" size="3">Select</font> a previously uploaded Samples zip file.</b></button>
         </li>
         <li>
-            <button class="btn btn-group-lg" @onclick=@Reload><b><font color="purple" size="3">Rescan</font> Folders on Server and re-get app data from Server</b></button>&nbsp;
+            <button class="btn btn-group-lg" @onclick=@ReloadSvr><b><font color="green" size="3">Switch</font> to Samples folder on Server and re-get app data from Server</b></button>&nbsp;
             <ul>
-                <li>Can rescan if the target folder is changed, without restarting server.</li>
+                <li>See <i>ServerSamplesFolder</i> in appsettings.json in Server code.</li>
+                <li>Assumes samples are already there. <i>Use above commands.</i></li>
+            </ul>
+        </li>
+        <li>
+            <button class="btn btn-group-lg" @onclick=@ReloadDev><b><font color="green" size="3">Switch</font> to Dev folder and re-get app data from Server</b></button>&nbsp;
+            <ul>
+                <li>See <i>DevPathToRepository</i> in appsettings.json in Server code.</li>
+                <li>Assumes there are samples there.</li>
             </ul>
         </li>
         <li>
@@ -102,13 +110,22 @@ else
         RootFolder = new ProjectClasses.FolderTree();
     }
 
-    async Task Reload()
+    async Task ReloadSvr()
     {
         RootFolder = null;
-        string param = $"Reload";
+        string param = $"Reload~1~1";
         var Filecontents = await _SamplesClient.GetTextorTextFile(param);
         var Folders = (await _SamplesClient.Get()).ToList();
         RootFolder = Folders.FirstOrDefault();;
+    }
+    // See Folder Ids in Server/Properties 1 above 0 below
+    async Task ReloadDev()
+    {
+        RootFolder = null;
+        string param = $"Reload~0~0";
+        var Filecontents = await _SamplesClient.GetTextorTextFile(param);
+        var Folders = (await _SamplesClient.Get()).ToList();
+        RootFolder = Folders.FirstOrDefault(); ;
     }
 
     void Upload()

@@ -105,17 +105,18 @@ namespace GetSampleApps.Client.Services
 
         public async Task<string> Delete (string folder)
         {
+            // For Ids see Server Properties/Resources File
             int id=-1;
             switch (folder)
             {
-                case "uploads":
-                    id = 1;
-                    break;
-                case "downloads":
+                case "uploads": //Nb: Zips uploaded (Zipped Sample folders)
                     id = 2;
                     break;
-                case "samples":
+                case "downloads": //Nb: Zips downloaded from zipped up project/solution folders
                     id = 3;
+                    break;
+                case "samples":  // Where  uploads are extracted to.
+                    id = 1;
                     break;         
             }
             if (id != -1)

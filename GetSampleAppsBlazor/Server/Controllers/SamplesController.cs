@@ -30,7 +30,7 @@ namespace GetSampleApps.Server.Controllers
         {
             get { return Shared.SamplesCollections.DefaultPath; }
         }
-        public static string ServerUploasdFolder
+        public static string ServerUploadsFolder
         {
             get { return Shared.SamplesCollections.ServerUploadsFolder; }
         }
@@ -74,7 +74,7 @@ namespace GetSampleApps.Server.Controllers
             string Command = "";
             string FolderId = "";
             string FileName = "";
-            int foldId;
+            int foldId=-1;
 
             string[] names = param.Split(new char[] { '~' });
             Command = names[0];
@@ -85,6 +85,8 @@ namespace GetSampleApps.Server.Controllers
                 if (names.Length > 2)
                 {
                     FolderId = names[2];
+                    if (!(int.TryParse(FolderId, out foldId)))
+                        foldId = -1;
                 }
             }
             
@@ -93,9 +95,9 @@ namespace GetSampleApps.Server.Controllers
             {
                 // Get ~ separated list of zip files in UploadsFolder
                 string Zips = "None";
-                if (Directory.Exists(ServerUploasdFolder))
+                if (Directory.Exists(ServerUploadsFolder))
                 {
-                    var zips = Directory.GetFiles(ServerUploasdFolder, "*.zip");
+                    var zips = Directory.GetFiles(ServerUploadsFolder, "*.zip");
                     var zipFilenames = from z in zips select Path.GetFileName(z);
                     Zips = String.Join("~", zipFilenames);
                 }
@@ -106,15 +108,15 @@ namespace GetSampleApps.Server.Controllers
                 /// Unzip an existing zip file in UploadsFolder to SamplesFolder
                 string SamplesZipFilename;
                 text = "404, Zip File Not found.";
-                if (names.Length > 3)
+                if (names.Length > 1)
                 {
-                    if (!string.IsNullOrEmpty(names[3]))
+                    if (!string.IsNullOrEmpty(names[1]))
                     {
                         {
-                            SamplesZipFilename = names[3];
-                            if (Directory.Exists(ServerUploasdFolder))
+                            SamplesZipFilename = names[1];
+                            if (Directory.Exists(ServerUploadsFolder))
                             {
-                                string filePath = Path.Combine(ServerUploasdFolder, SamplesZipFilename);
+                                string filePath = Path.Combine(ServerUploadsFolder, SamplesZipFilename);
                                 if (System.IO.File.Exists(filePath))
                                 {
                                     if (Directory.Exists(ServerSamplesFolder))
@@ -132,11 +134,7 @@ namespace GetSampleApps.Server.Controllers
             }
             else if (Command=="RELOAD")
             {
-                /// Rescan the Samples folder
-                var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath);
-                GetSampleApps.Shared.SamplesCollections.GetFolderandProjectLists(
-                    rootSample
-                );
+                Startup.Setup(foldId);
                 text = "OK";
             }
             else {
@@ -234,15 +232,16 @@ namespace GetSampleApps.Server.Controllers
             int ResponseStatus = 200; //OK
             try
             {
+                //  For Ids see Server Properties/Resources File
                 switch (FolderId)
                 {
-                    case "1":
+                    case "3":
                         folder = ServerZipFolder;
                         break;
                     case "2":
-                        folder = ServerUploasdFolder;
+                        folder = ServerUploadsFolder;
                         break;
-                    case "3":
+                    case "1":
                         folder = ServerSamplesFolder;
                         break;
                 }
@@ -277,9 +276,9 @@ namespace GetSampleApps.Server.Controllers
         [HttpPost]
         public async Task Post(IEnumerable<IFormFile> files)
         {
-            if (!Directory.Exists(ServerUploasdFolder))
+            if (!Directory.Exists(ServerUploadsFolder))
             {
-                Directory.CreateDirectory(ServerUploasdFolder);
+                Directory.CreateDirectory(ServerUploadsFolder);
             }
             if (files == null)
             {
@@ -298,7 +297,7 @@ namespace GetSampleApps.Server.Controllers
                     // Some browsers send file names with full path.
                     // We are only interested in the file name.
                     var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                    var physicalPath = Path.Combine(ServerUploasdFolder, fileName);
+                    var physicalPath = Path.Combine(ServerUploadsFolder, fileName);
 
                     // Implement security mechanisms here - prevent path traversals,
                     // check for allowed extensions, types, size, content, viruses, etc.

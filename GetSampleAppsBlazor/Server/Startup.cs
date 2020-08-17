@@ -18,6 +18,7 @@ namespace GetSampleApps.Server
         public static void Setup(int pathToUse )
         {
             string defaultPath = GetSampleApps.Shared.SamplesCollections.SetSamplesFolder(pathToUse);
+            System.Diagnostics.Debug.WriteLine($"Startup.Setup() path to use: {defaultPath}");
             if (defaultPath[0] != '!')
             {
                 var rootSample = GetSamples.GetSamplesProjects.GetFolders(defaultPath);
@@ -36,14 +37,13 @@ namespace GetSampleApps.Server
 
             int PathToUse  = Configuration.GetValue<int>("PathToUse");
             string DevPathToRepository = Configuration.GetValue<string>("DevPathToRepository");
-            string ServerSampesFolder = Configuration.GetValue<string>("ServerSampesFolder");
+            string ServerSamplesFolder = Configuration.GetValue<string>("ServerSamplesFolder");
             string ServerZipFolder = Configuration.GetValue<string>("ServerZipFolder");
             string ServerUploadsFolder = Configuration.GetValue<string>("ServerUploadsFolder");
-            string ServerSamplesFolder = Configuration.GetValue<string>("ServerSamplesFolder");
 
             GetSampleApps.Shared.SamplesCollections.PathToUse = PathToUse;
             GetSampleApps.Shared.SamplesCollections.ServerZipFolder = ServerZipFolder;
-            GetSampleApps.Shared.SamplesCollections.ServerZipFolder = ServerZipFolder;
+            GetSampleApps.Shared.SamplesCollections.ServerSamplesFolder = ServerSamplesFolder;
             GetSampleApps.Shared.SamplesCollections.ServerUploadsFolder = ServerUploadsFolder;
             GetSampleApps.Shared.SamplesCollections.DevPathToRepository = DevPathToRepository;
 
