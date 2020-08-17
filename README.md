@@ -43,12 +43,14 @@ Set for .NET IoT SDK repository
 - Download text (.cs or .csproj) on server and display
   - Can then copy or download it
 - Display an image listed in folder
-- Might add a file (zip) upload so can remotely update the folders.
+- Added a file (zip) upload so can remotely update the folders.
   - Can now do that (File upload). If zip file then gets unzipped (Needs testing)
+  - Can also select from previously uploaded zips.
+  - Can also toggle between folder in server and folder on server machine but not in its folder.
 
 ## Finale!
 
-<b><i> Can now upload a zipped folder of samples, which get extracted to the server's repository folder,  
+<b><i> Can now upload a zipped folder of samples, which get extracted to the server's Samples folder,  
   then scan it, upload the new data to the client and then use those samples.</i><b>
 
 
