@@ -1,4 +1,4 @@
-# .NET C# Sample Projects Indexor
+# .NET C# Sample Projects Indexor ... Now at Version 1.0.0
 
 A Project to generically recurse a folder for sample C# apps information. 
 Displays the information in folding tree layout.  
