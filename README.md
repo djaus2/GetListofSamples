@@ -44,7 +44,7 @@ Set for .NET IoT SDK repository
   - Can then copy or download it
 - Display an image listed in folder
 - Added a file (zip) upload so can remotely update the folders.
-  - Can now do that (File upload). If zip file then gets unzipped (Needs testing)
+  - Can now do that (File upload). If zip file then gets unzipped.
   - Can also select from previously uploaded zips.
   - Can also toggle between folder in server and folder on server machine but not in its folder.
 
