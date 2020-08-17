@@ -7,7 +7,7 @@
 @inject SamplesClient _SamplesClient
 <h1>Select Sample Zip</h1>
 <br />
-<button class="btn btn-primary" @onclick="@GotoRepository">Go Back</button>
+<button class="btn btn-primary" @onclick="@GoBack">Go Back</button>
 <br />
 @if ((Zips == null) || (zx==null))
 {
@@ -138,9 +138,9 @@ else
         StateHasChanged();
     }
 
-    void GotoRepository()
+    void GoBack()
     {
-        navigator.NavigateTo("/repository");
+        navigator.NavigateTo("/manage");
     }
 
     class ZipModel
@@ -154,7 +154,7 @@ else
         if (!string.IsNullOrEmpty(zipFile))
         {
             zx = null;
-            string getZips = $"1~1~Unzip~{zipFile}";
+            string getZips = $"Unzip~{zipFile}";
             string result = await _SamplesClient.GetTextorTextFile(getZips);
             string[] Result = result.Split(new char[] { ',' });
             zx = true;

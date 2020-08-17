@@ -26,11 +26,22 @@ namespace GetSampleApps.Server.Controllers
         /// <summary>
         /// Thes are set by Server startup, read from appsettings.json
         /// </summary>
-        public static string DefaultPath { get; set; } = "";
-        public static string UploadFolder { get; set; } = "";
-        public static string ZipFolder { get; set; } = "";
-        public static string SamplesFolder { get; set; } = "";
-        public static string GenerateTextPath { get; set; } = "";
+        public static string DefaultPath
+        {
+            get { return Shared.SamplesCollections.DefaultPath; }
+        }
+        public static string ServerUploasdFolder
+        {
+            get { return Shared.SamplesCollections.ServerUploadsFolder; }
+        }
+        public static string ServerZipFolder
+        {
+            get { return Shared.SamplesCollections.ServerZipFolder; }
+        }
+        public static string ServerSamplesFolder
+        {
+            get { return Shared.SamplesCollections.ServerSamplesFolder; }
+        }
         ////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -42,7 +53,8 @@ namespace GetSampleApps.Server.Controllers
         [HttpGet]
         public string Get()
         {
-
+            if (DefaultPath[0] == '!')
+                return DefaultPath;
             string json = "";
             var projects = SamplesCollections.Projects;
             string json1 = JsonConvert.SerializeObject(projects);
@@ -81,9 +93,9 @@ namespace GetSampleApps.Server.Controllers
             {
                 // Get ~ separated list of zip files in UploadsFolder
                 string Zips = "None";
-                if (Directory.Exists(UploadFolder))
+                if (Directory.Exists(ServerUploasdFolder))
                 {
-                    var zips = Directory.GetFiles(UploadFolder, "*.zip");
+                    var zips = Directory.GetFiles(ServerUploasdFolder, "*.zip");
                     var zipFilenames = from z in zips select Path.GetFileName(z);
                     Zips = String.Join("~", zipFilenames);
                 }
@@ -100,18 +112,18 @@ namespace GetSampleApps.Server.Controllers
                     {
                         {
                             SamplesZipFilename = names[3];
-                            if (Directory.Exists(UploadFolder))
+                            if (Directory.Exists(ServerUploasdFolder))
                             {
-                                string filePath = Path.Combine(UploadFolder, SamplesZipFilename);
+                                string filePath = Path.Combine(ServerUploasdFolder, SamplesZipFilename);
                                 if (System.IO.File.Exists(filePath))
                                 {
-                                    if (Directory.Exists(SamplesFolder))
+                                    if (Directory.Exists(ServerSamplesFolder))
                                     {
-                                        Directory.Delete(SamplesFolder, true);
+                                        Directory.Delete(ServerSamplesFolder, true);
                                     }
-                                    Directory.CreateDirectory(SamplesFolder);
-                                    ZipFile.ExtractToDirectory(filePath, SamplesFolder);
-                                    text = $"200,{SamplesZipFilename} extracted to {SamplesFolder}";
+                                    Directory.CreateDirectory(ServerSamplesFolder);
+                                    ZipFile.ExtractToDirectory(filePath, ServerSamplesFolder);
+                                    text = $"200,{SamplesZipFilename} extracted to {ServerSamplesFolder}";
                                 }
                             }
                         }
@@ -121,8 +133,8 @@ namespace GetSampleApps.Server.Controllers
             else if (Command=="RELOAD")
             {
                 /// Rescan the Samples folder
-                var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
-                GetSampleApps.Shared.SamplesCollections.Init(
+                var rootSample = GetSamples.GetSamplesProjects.GetFolders(DefaultPath);
+                GetSampleApps.Shared.SamplesCollections.GetFolderandProjectLists(
                     rootSample
                 );
                 text = "OK";
@@ -169,11 +181,11 @@ namespace GetSampleApps.Server.Controllers
                     }
                     else if (Command == "ZIP")
                     {
-                        if (!Directory.Exists(ZipFolder))
+                        if (!Directory.Exists(ServerZipFolder))
                         {
-                            Directory.CreateDirectory(ZipFolder);
+                            Directory.CreateDirectory(ServerZipFolder);
                         }
-                        string zipPath = Path.Combine(ZipFolder,FileName);
+                        string zipPath = Path.Combine(ServerZipFolder,FileName);
                         if (!System.IO.File.Exists(zipPath))
                         {
                             ZipFile.CreateFromDirectory(fpath, zipPath);
@@ -225,13 +237,13 @@ namespace GetSampleApps.Server.Controllers
                 switch (FolderId)
                 {
                     case "1":
-                        folder = ZipFolder;
+                        folder = ServerZipFolder;
                         break;
                     case "2":
-                        folder = UploadFolder;
+                        folder = ServerUploasdFolder;
                         break;
                     case "3":
-                        folder = SamplesFolder;
+                        folder = ServerSamplesFolder;
                         break;
                 }
                 if (folder != "skip")
@@ -265,9 +277,9 @@ namespace GetSampleApps.Server.Controllers
         [HttpPost]
         public async Task Post(IEnumerable<IFormFile> files)
         {
-            if (!Directory.Exists(UploadFolder))
+            if (!Directory.Exists(ServerUploasdFolder))
             {
-                Directory.CreateDirectory(UploadFolder);
+                Directory.CreateDirectory(ServerUploasdFolder);
             }
             if (files == null)
             {
@@ -286,7 +298,7 @@ namespace GetSampleApps.Server.Controllers
                     // Some browsers send file names with full path.
                     // We are only interested in the file name.
                     var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                    var physicalPath = Path.Combine(UploadFolder, fileName);
+                    var physicalPath = Path.Combine(ServerUploasdFolder, fileName);
 
                     // Implement security mechanisms here - prevent path traversals,
                     // check for allowed extensions, types, size, content, viruses, etc.
@@ -298,13 +310,13 @@ namespace GetSampleApps.Server.Controllers
                     }
                     if (Path.GetExtension(file.FileName).ToUpper() == ".ZIP")
                     {
-                        if (Directory.Exists(SamplesFolder))
+                        if (Directory.Exists(ServerSamplesFolder))
                         {
-                            Directory.Delete(SamplesFolder, true);
+                            Directory.Delete(ServerSamplesFolder, true);
                         }
-                        Directory.CreateDirectory(SamplesFolder);
+                        Directory.CreateDirectory(ServerSamplesFolder);
                         // Extract it to ./Repository
-                        ZipFile.ExtractToDirectory(physicalPath, SamplesFolder);
+                        ZipFile.ExtractToDirectory(physicalPath, ServerSamplesFolder);
                     }
 
                     FileInfo fi = new FileInfo(physicalPath);

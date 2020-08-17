@@ -17,37 +17,47 @@
 }
 else
 {
-    <table border="0">
-        <thead><tr>
-            @*<th width="8">C</th><th width="8">P</th><th width="8">S</th><th width="8">R</th><th width="8">I</th><th width="8">D</th>*@
-        @for (int ii=1;ii<15;ii++)
-        {
-            <th width="60"></th>
-        }
-        </tr></thead>
-        <FolderComponent folder=@RootFolder.Id IsViz="false" />
-    </table>
+    @if (RootFolder.FolderName[0] == '!')
+    {
+        <p>@RootFolder.FolderName!</p>
+    }
+    else
+    {
+        <table border="0">
+            <thead>
+                <tr>
+                    @*<th width="8">C</th><th width="8">P</th><th width="8">S</th><th width="8">R</th><th width="8">I</th><th width="8">D</th>*@
+                    @for (int ii = 1; ii < 15; ii++)
+                    {
+                        <th width="60"></th>
+                    }
+                </tr>
+            </thead>
+            <FolderComponent folder=@RootFolder.Id IsViz="false" />
+        </table>
+    }
 }
 
 @code {
 
 
-    private List<FolderTree> Folders;
     private FolderTree RootFolder = null;
-    public Dictionary<int, FolderTree> FolderDict { get; set; }
+
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        if (_SamplesClient.RootFolder == null)
+        if (SamplesClient.RootFolder == null)
         {
-            Folders = (await _SamplesClient.Get()).ToList();
+            var Folders = (await _SamplesClient.Get()).ToList();
         }
-        var Projects = _SamplesClient.Projects;
-        RootFolder = _SamplesClient.RootFolder;
-        FolderDict = SamplesClient.FolderDict;
-        RootFolder = Folders.FirstOrDefault();
+        RootFolder = SamplesClient.RootFolder;
+        if (RootFolder.FolderName == "None")
+        {
+
+        }
+
     }
 
 }

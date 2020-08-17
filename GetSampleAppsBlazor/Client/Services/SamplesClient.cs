@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
 using Microsoft.JSInterop;
+using System.Diagnostics.Tracing;
 
 namespace GetSampleApps.Client.Services
 {
@@ -32,7 +33,7 @@ namespace GetSampleApps.Client.Services
 
         public Project[] Projects { get; set; } = null;
         public FolderTree[] Folders { get; set; }
-        public FolderTree RootFolder { get; set; }
+        public static FolderTree RootFolder { get; set; }
         public static Dictionary<int,FolderTree>FolderDict {get; set;}
         public static Dictionary<int, Project> ProjectDict { get; set; }
 
@@ -58,6 +59,11 @@ namespace GetSampleApps.Client.Services
         {
             var strn = await client.GetAsync(ServiceEndpoint);
             string contents = await strn.Content.ReadAsStringAsync();
+            if (contents[0] == '!')
+            {
+                RootFolder = new FolderTree { FolderName = contents};
+                return new FolderTree[0]; 
+            }
             string[] jsons = contents.Split(new char[] { '~' });
             Folders =  JsonConvert.DeserializeObject<FolderTree[]>(jsons[0]);
             RootFolder = Folders[0];

@@ -24,7 +24,7 @@
 
 <InputFile OnChange="HandleSelection" />
 <button class="btn btn-primary" @onclick="@Cancel">Cancel</button>&nbsp;&nbsp;
-<button class="btn btn-primary" @onclick="@GotoRepository">Go Back</button>
+<button class="btn btn-primary" @onclick="@GotoRefresh">Go Back</button>
 <br />
 
 @if (State == null)
@@ -56,7 +56,7 @@ else
 
 @code {
 
-    string? State = "Ready";
+    string State = "Ready";
     string status1;
     string status2;
     string status3;
@@ -134,7 +134,7 @@ else
                 if (OK)
                     status4 = $"4. Finished Uploading {file.Name} to Server";
             }
-            catch (TaskCanceledException e)
+            catch (TaskCanceledException )
             {
                 if (step == 0)
                     status2 = "File Loading was Cancelled!";
@@ -160,8 +160,8 @@ else
         }
     }
 
-    void GotoRepository()
+    void GotoRefresh()
     {
-        navigator.NavigateTo("/repository");
+        navigator.NavigateTo("/refresh");
     }
 }

@@ -9,22 +9,20 @@ namespace GetSamples
 {
     public static class GetSamplesProjects
     {
-        public static string GenerateTextPath = "c:\\temp\\dotnet";
-        //const string DefaultPath = @"C:\Users\DavidJones\source\dotnet\djaus2-2-iot\iot\src\Devices";
-        public static  string DefaultPath =  @"C:\Users\DavidJones\source\dotnet-djaus-iot\iot";
+
+        public static  string DefaultPath = @"C:\\temp\\quickstarts";
 
 
-        public static FolderTree GetFolders(string path, string generateTextPath)
+        public static FolderTree GetFolders(string path)
         {
             FolderTree.AllFolderTrees = new List<FolderTree>();
             Project.AllProjects = new List<Project>();
 
-            GenerateTextPath = generateTextPath;
             if (path == "")
                 path = DefaultPath;
             var rootFolder = GetTree(path,null);
             
-            System.Diagnostics.Debug.WriteLine("=======");
+            System.Diagnostics.Debug.WriteLine(" =======");
             System.Diagnostics.Debug.WriteLine(Project.AllProjects.Count());
             System.Diagnostics.Debug.WriteLine("=======");
             System.Diagnostics.Debug.WriteLine(FolderTree.AllFolderTrees.Count());

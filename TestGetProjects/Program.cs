@@ -41,7 +41,7 @@ namespace TestGetProjects
 
             string GenerateTextPath = Configuration.GetValue<string>("GenerateTextPath");
 
-            var rootFolder = GetSamples.GetSamplesProjects.GetFolders(DefaultPath, GenerateTextPath);
+            var rootFolder = GetSamples.GetSamplesProjects.GetFolders(DefaultPath);
 
 
             System.Diagnostics.Debug.WriteLine(Project.AllProjects.Count);

@@ -32,54 +32,62 @@ else
 {
     <h2>About</h2>
     <p><b><i>Have searched the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
-   <h4>File Types of interest.</h4>
+    @if (RootFolder.FolderName[0] == '!')
+    {
+        <p>@RootFolder.FolderName!</p>
+    }
+    <h4>File Types of interest.</h4>
     <ul>
-       <li>Meta-information collected about them when folders are recursively scanned.</li>
-       <li>Project files of interest:
+        <li>Meta-information collected about them when folders are recursively scanned.</li>
+        <li>
+            Project files of interest:
             <ul>
                 <li>.csproj</li>
                 <li>.cs</li>
                 <li>.sln</li>
             </ul>
-       </li>
-       <li>
-           Other files of interest:
-           <ul>
-               <li>.md (Markdon:ReadMes)</li>
-               <li>Various image file types</li>
-           </ul>
-       </li>
-       <li>
-           All other file types are ignored:
-           <ul>
-               <li>If a leaf folder (bottom of a recurse) does not have any of the above it is not listed.</li>
-           </ul>
-       </li>
-   </ul>
-   <h4>App Details</h4>
+        </li>
+        <li>
+            Other files of interest:
+            <ul>
+                <li>.md (Markdon:ReadMes)</li>
+                <li>Various image file types</li>
+            </ul>
+        </li>
+        <li>
+            All other file types are ignored:
+            <ul>
+                <li>If a leaf folder (bottom of a recurse) does not have any of the above it is not listed.</li>
+            </ul>
+        </li>
+    </ul>
+    <h4>App Details</h4>
     <ul>
         <li><b>Root Tab:</b> This page.</li>
         <li><b>Index Tab: </b>Explore the folders and files in a tree view.</li>
         <li><b>.NET Core proj file Tab:</b> A simple project file for use.</li>
         <li><b>Refresh Tab: </b>Rescan folders-Reload folders from server to client.</li>
-        <li><i>In folders can:</i>
+        <li>
+            <i>In folders can:</i>
             <ul>
-            <li>View solution, project, C# files from where you can copy or download file.</li>
-            <li>View Image and ReadMe( .md format) files</li>
-            <li>If folder has a solution file can get zip of folder (and sub folders)</li>
+                <li>View solution, project, C# files from where you can copy or download file.</li>
+                <li>View Image and ReadMe( .md format) files</li>
+                <li>If folder has a solution file can get zip of folder (and sub folders)</li>
             </ul>
         </li>
-        <li><i>Also:</i>
-        <ul>
-            <li><b>Project Tab:</b> Acess from folders that have a .csproj file.
-                <ul>
-                <li>Can view, copy and download individual files from there.</li>
-                <li>Can Zip that folder from there as well.</li>
-                </ul>
-            </li>
-            <li>Set folder to start scan at in Server appsettings.json</li>
-            <li><b><i>Nb:</i></b> Leaf folders without target file types are ignored. But will get zipped up.</li>
-        </ul>
+        <li>
+            <i>Also:</i>
+            <ul>
+                <li>
+                    <b>Project Tab:</b> Acess from folders that have a .csproj file.
+                    <ul>
+                        <li>Can view, copy and download individual files from there.</li>
+                        <li>Can Zip that folder from there as well.</li>
+                    </ul>
+                </li>
+                <li>Set folder to start scan at in Server appsettings.json</li>
+                <li><b><i>Nb:</i></b> Leaf folders without target file types are ignored. But will get zipped up.</li>
+            </ul>
         </li>
 
     </ul>
@@ -93,8 +101,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var Folders = (await _SamplesClient.Get()).ToList();
-        RootFolder = Folders.FirstOrDefault();
+        if (SamplesClient.RootFolder == null)
+        {
+            var Folders = (await _SamplesClient.Get()).ToList();
+        }
+        RootFolder = SamplesClient.RootFolder;
+        if (RootFolder.FolderName == "None")
+        {
+
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)

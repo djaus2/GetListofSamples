@@ -1,8 +1,10 @@
-﻿@page "/refresh"
+﻿@page "/manage"
 @using Services
 @inject HttpClient Http
 @inject SamplesClient _SamplesClient
-<h1>Refresh/Update Sample Apps</h1>
+@inject NavigationManager navigator
+
+<h1>Manage Samples</h1>
 
 @if (RootFolder == null)
 {
@@ -24,6 +26,12 @@ else
 {
     <p><b><i>Have loaded the folders under the folder: </i><font color="blue">@RootFolder.FolderName</font></b></p>
     <ul>
+        <li>
+            <button class="btn btn-group-lg" @onclick=@Upload><b><font color="purple" size="3">Upload</font> a Samples zip file to Server, and extract.</b></button>&nbsp;
+        </li>
+        <li>
+            <button class="btn btn-toolbar" @onclick=@SelectZip><i>Or ...</i><b><font color="purple" size="3">Select</font> A previously uploaded Samples zip file.</b></button>
+        </li>
         <li>
             <button class="btn btn-group-lg" @onclick=@Reload><b><font color="purple" size="3">Rescan</font> Folders on Server and re-get app data from Server</b></button>&nbsp;
             <ul>
@@ -62,8 +70,11 @@ else
     {
         await base.OnInitializedAsync();
 
-        Folders = (await _SamplesClient.Get()).ToList();
-        RootFolder = Folders.FirstOrDefault();
+        if (SamplesClient.RootFolder == null)
+        {
+            Folders = (await _SamplesClient.Get()).ToList();
+        }
+        RootFolder = SamplesClient.RootFolder;
 
     }
 
@@ -98,6 +109,16 @@ else
         var Filecontents = await _SamplesClient.GetTextorTextFile(param);
         var Folders = (await _SamplesClient.Get()).ToList();
         RootFolder = Folders.FirstOrDefault();;
+    }
+
+    void Upload()
+    {
+        navigator.NavigateTo("/uploads");
+    }
+
+    void SelectZip()
+    {
+        navigator.NavigateTo("/selectzip");
     }
 
 }

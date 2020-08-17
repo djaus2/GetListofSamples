@@ -15,9 +15,23 @@ namespace GetSampleApps.Server.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        public static string ZipFolder { get; set; } = "";
-        public static string UploadFolder { get; set; } = "";
-        public static string SamplesFolder { get; set; } = "";
+        public static string DefaultPath
+        {
+            get { return Shared.SamplesCollections.DefaultPath; }
+        }
+        public static string ServerUploadsFolder
+        {
+            get { return Shared.SamplesCollections.ServerUploadsFolder; }
+        }
+        public static string ServerZipFolder
+        {
+            get { return Shared.SamplesCollections.ServerZipFolder; }
+        }
+        public static string ServerSamplesFolder
+        {
+            get { return Shared.SamplesCollections.ServerSamplesFolder; }
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////
         private readonly IWebHostEnvironment environment;
         public UploadController(IWebHostEnvironment environment)
         {
@@ -30,9 +44,9 @@ namespace GetSampleApps.Server.Controllers
         //[HttpPost]
         //public async Task<IActionResult> Post(IEnumerable<IFormFile> files) // the default field name. See SaveField
         {
-            if (!Directory.Exists(UploadFolder))
+            if (!Directory.Exists(ServerUploadsFolder))
             {
-                Directory.CreateDirectory(UploadFolder);
+                Directory.CreateDirectory(ServerUploadsFolder);
             }
             if (files == null)
             { 
@@ -51,7 +65,7 @@ namespace GetSampleApps.Server.Controllers
                     // Some browsers send file names with full path.
                     // We are only interested in the file name.
                     var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                    var physicalPath = Path.Combine(UploadFolder, fileName);
+                    var physicalPath = Path.Combine(ServerUploadsFolder, fileName);
 
                     // Implement security mechanisms here - prevent path traversals,
                     // check for allowed extensions, types, size, content, viruses, etc.
@@ -63,13 +77,13 @@ namespace GetSampleApps.Server.Controllers
                     }
                     if (Path.GetExtension(file.FileName).ToUpper() == ".ZIP")
                     {
-                        if (Directory.Exists(SamplesFolder))
+                        if (Directory.Exists(ServerSamplesFolder))
                         {
-                            Directory.Delete(SamplesFolder, true);
+                            Directory.Delete(ServerSamplesFolder, true);
                         }
-                        Directory.CreateDirectory(SamplesFolder);
+                        Directory.CreateDirectory(ServerSamplesFolder);
                         // Extract it to ./Repository
-                        ZipFile.ExtractToDirectory(physicalPath, SamplesFolder);
+                        ZipFile.ExtractToDirectory(physicalPath, ServerSamplesFolder);
                     }
                 
                     FileInfo fi = new FileInfo(physicalPath);
