@@ -13,7 +13,7 @@
 </tr>
 </table>
 
-<ClipBoardComponent Text=@TextToCopy Filename=@ShowFileName />
+<ClipBoardComponent Text="" FolderId=@FolderId Filename=@ShowFileName />
 
 @code
 {
@@ -26,18 +26,14 @@
     public string ShowFileName { get; set; }
 
 
-    public string TextToCopy { get; set; } = "";
-
     protected override async Task OnInitializedAsync()
     {
-
+        System.Diagnostics.Debug.WriteLine("****");
+        System.Diagnostics.Debug.WriteLine(FolderId);
+        System.Diagnostics.Debug.WriteLine(Filename);
+        System.Diagnostics.Debug.WriteLine("****");
         await base.OnInitializedAsync();
-        int id = int.Parse(FolderId);
-
         ShowFileName = Filename;
-        string param = $"GetFile~{Filename}~{id}";
-        string Filecontents = await _SamplesClient.GetTextorTextFile(param);
-        TextToCopy = Filecontents;
         StateHasChanged();
     }
 
